@@ -72,7 +72,7 @@
                 <i class="fa-solid fa-wand-magic-sparkles text-xl"></i>
             </div>
             <div>
-                <h1 class="text-xl font-bold tracking-wide">ஜாதக புகைப்பட இணைப்பான் <span class="text-amber-500 text-xs font-normal">v2.1 (Live Edit Edition)</span></h1>
+                <h1 class="text-xl font-bold tracking-wide">ஜாதக புகைப்பட இணைப்பான் <span class="text-amber-500 text-xs font-normal">v2.2 (Brand Edition)</span></h1>
                 <p class="text-xs text-slate-400">கோப்பிலுள்ள விவரங்களை நேரடியாகக் கிளிக் செய்து எடிட் செய்யுங்கள்!</p>
             </div>
         </div>
@@ -254,9 +254,15 @@
                                 <label class="block text-slate-400 mb-1">திசை இருப்பு விபரம்</label>
                                 <input type="text" id="edit-dasha" oninput="updateFieldState('dasha', this.value)" class="w-full bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white focus:border-amber-500 outline-none">
                             </div>
-                            <div>
-                                <label class="block text-slate-400 mb-1">தொடர்பு எண் (Phone)</label>
-                                <input type="text" id="edit-phone" oninput="updateFieldState('phone', this.value)" class="w-full bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white focus:border-amber-500 outline-none">
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block text-slate-400 mb-1">தொடர்பு எண் (Phone)</label>
+                                    <input type="text" id="edit-phone" oninput="updateFieldState('phone', this.value)" class="w-full bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white focus:border-amber-500 outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-slate-400 mb-1">அச்சகம் (Printer Brand)</label>
+                                    <input type="text" id="edit-printer" oninput="updateFieldState('printer', this.value)" class="w-full bg-slate-800 border border-slate-700 rounded px-2.5 py-1.5 text-white focus:border-amber-500 outline-none">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -408,7 +414,7 @@
                                     <span id="lbl-tob" class="font-mono font-semibold text-slate-805 direct-editable flex-1" contenteditable="true">09:37 AM</span>
                                 </div>
                                 <div class="flex items-center space-x-2 text-slate-900">
-                                    <span class="w-24 text-slate-500 font-bold shrink-0">நட்சத்திரம்/ராசி:</span>
+                                    <span class="w-24 text-slate-500 font-bold shrink-0">நুক্তি/ராசி:</span>
                                     <span id="lbl-starRasi" class="font-semibold text-slate-800 direct-editable flex-1" contenteditable="true">ரேவதி 3-ஆம் பாதம், மீன ராசி</span>
                                 </div>
                                 <div class="flex items-center space-x-2 text-slate-900">
@@ -592,6 +598,11 @@
                         </div>
                     </div>
 
+                    <!-- Printer Branding Footer -->
+                    <div class="text-right text-[10px] text-slate-500 font-bold italic z-10 relative px-4 mt-1 flex justify-end">
+                        <span id="lbl-printer" class="direct-editable text-red-850" contenteditable="true">ரவி பிரிண்டர் உடுமலை,,</span>
+                    </div>
+
                 </div>
 
                 <!-- MODE 2: RAW CANVAS FREE DESIGN WITH COORDINATES -->
@@ -651,7 +662,8 @@
             job: "TNEB (அரசுப் பணி)",
             income: "ரூ. 50,000/-",
             dasha: "பிறப்பில் புதன் திசை இருப்பு: 7 வரு 2 மா 21 நா. 22-08-2027 அன்றுடன் சுக்கிர திசையில் சனி புக்தி முடிவுறும்",
-            phone: "9442008538"
+            phone: "9442008538",
+            printer: "ரவி பிரிண்டர் உடுமலை,,"
         };
 
         // Zodiac grids state (Rasi & Navamsam)
@@ -901,7 +913,7 @@
             // Bind textual fields
             const editableFields = [
                 'subdeity', 'caste', 'name', 'dob', 'tob', 'starRasi', 'lagnam', 'pob', 
-                'father', 'mother', 'siblings', 'assets', 'job', 'income', 'dasha', 'phone'
+                'father', 'mother', 'siblings', 'assets', 'job', 'income', 'dasha', 'phone', 'printer'
             ];
 
             editableFields.forEach(field => {
@@ -1090,6 +1102,7 @@
                             income: { type: "STRING" },
                             dasha: { type: "STRING" },
                             phone: { type: "STRING" },
+                            printer: { type: "STRING" },
                             rasiPlanets: {
                                 type: "OBJECT",
                                 properties: {
