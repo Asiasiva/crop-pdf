@@ -44,6 +44,23 @@
             overflow: hidden;
             transition: all 0.3s ease;
         }
+        /* Highlight style for directly editable text elements */
+        .direct-editable {
+            cursor: text;
+            border-bottom: 1px dashed transparent;
+            transition: all 0.2s ease;
+            padding: 1px 4px;
+            border-radius: 4px;
+        }
+        .direct-editable:hover {
+            border-bottom-color: #d97706; /* amber-600 */
+            background-color: rgba(217, 119, 6, 0.08);
+        }
+        .direct-editable:focus {
+            outline: 2px solid #d97706;
+            background-color: rgba(217, 119, 6, 0.12);
+            border-bottom-color: transparent;
+        }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen font-sans flex flex-col">
@@ -55,13 +72,13 @@
                 <i class="fa-solid fa-wand-magic-sparkles text-xl"></i>
             </div>
             <div>
-                <h1 class="text-xl font-bold tracking-wide">ஜாதக புகைப்பட இணைப்பான் <span class="text-amber-500 text-xs font-normal">v2.0 (AI Edition)</span></h1>
-                <p class="text-xs text-slate-400">File 1 & 2-ன் கோஆர்டினேட்டுகளை மாற்றி File 3 உருவாக்குங்கள்</p>
+                <h1 class="text-xl font-bold tracking-wide">ஜாதக புகைப்பட இணைப்பான் <span class="text-amber-500 text-xs font-normal">v2.1 (Live Edit Edition)</span></h1>
+                <p class="text-xs text-slate-400">கோப்பிலுள்ள விவரங்களை நேரடியாகக் கிளிக் செய்து எடிட் செய்யுங்கள்!</p>
             </div>
         </div>
         <div class="flex items-center space-x-4">
             <span class="text-xs bg-slate-800 px-3 py-1.5 rounded-full text-amber-400 font-semibold border border-amber-500/20">
-                <i class="fa-solid fa-circle-check mr-1.5"></i> திருக்கணித முறை / AI தானியங்கி வாசிப்பு
+                <i class="fa-solid fa-circle-check mr-1.5"></i> நேரடி திருத்த வசதி இயக்கப்பட்டது
             </span>
         </div>
     </header>
@@ -257,7 +274,7 @@
                         </div>
 
                         <p class="text-[10px] text-slate-400">
-                            விருச்சிகம், மேஷம், ரிஷபம் போன்ற கட்டங்களுக்குரிய கிரகங்களை நேரடியாக இங்கு டைப் செய்யுங்கள்.
+                            விருச்சிகம், மேஷம், ரிஷபம் போன்ற கட்டங்களுக்குரிய கிரகங்களை நேரடியாக இங்கு அல்லது வலப்பக்கம் உள்ள ஜாதகத் தாள் கட்டங்களில் டைப் செய்யலாம்.
                         </p>
 
                         <!-- Dynamically Generated Inputs for the Selected Chart -->
@@ -332,7 +349,7 @@
 
             </div>
 
-            <!-- Export Buttons (At Footer of Sidebar) -->
+            <!-- Export Buttons -->
             <div class="p-6 border-t border-slate-800 bg-slate-950 space-y-2.5">
                 <button onclick="downloadOutput('image')" class="w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold rounded-xl shadow-lg hover:shadow-amber-500/10 active:scale-[0.98] transition duration-200">
                     <i class="fa-solid fa-file-image mr-2 text-lg"></i> File 3 - ஆக மாற்றுக (JPEG)
@@ -363,11 +380,13 @@
                     <div class="text-center relative z-10 pt-4">
                         <div class="text-amber-750 text-sm font-semibold tracking-wider flex justify-center items-center gap-2">
                             <span class="h-px w-8 bg-amber-600"></span>
-                            <span id="lbl-subdeity">செல்லம்பட்டி அருள்மிகு சீலக்காரி அம்மன் துணை</span>
+                            <span id="lbl-subdeity" class="direct-editable" contenteditable="true">செல்லம்பட்டி அருள்மிகு சீலக்காரி அம்மன் துணை</span>
                             <span class="h-px w-8 bg-amber-600"></span>
                         </div>
                         <h2 class="text-3xl font-extrabold text-red-700 mt-2 tracking-wide font-serif">ஜாதக வரன் விவரம்</h2>
-                        <p id="lbl-caste" class="text-xs text-amber-800 font-semibold mt-1">விஷ்ணு குலம், பால கோத்திரம், கவர நாயுடு</p>
+                        <div class="flex justify-center mt-1">
+                            <p id="lbl-caste" class="text-xs text-amber-800 font-semibold direct-editable" contenteditable="true">விஷ்ணு குலம், பால கோத்திரம், கவர நாயுடு</p>
+                        </div>
                     </div>
 
                     <!-- Photo Placeholder & Personal Info Layout -->
@@ -377,35 +396,35 @@
                         <div class="col-span-7 space-y-2.5">
                             <div class="bg-amber-50/70 p-3.5 rounded-lg border border-amber-100/70 space-y-1.5 text-xs">
                                 <div class="flex items-center space-x-2 text-slate-900">
-                                    <span class="w-24 text-slate-500 font-bold">பெயர்:</span>
-                                    <span id="lbl-name" class="font-extrabold text-slate-850">M.சூரிய சாரதி, B.Sc., (IIT)</span>
+                                    <span class="w-24 text-slate-500 font-bold shrink-0">பெயர்:</span>
+                                    <span id="lbl-name" class="font-extrabold text-slate-850 direct-editable flex-1" contenteditable="true">M.சூரிய சாரதி, B.Sc., (IIT)</span>
                                 </div>
                                 <div class="flex items-center space-x-2 text-slate-900">
-                                    <span class="w-24 text-slate-500 font-bold">பிறந்த தேதி:</span>
-                                    <span id="lbl-dob" class="font-semibold text-slate-800">01-06-1997 (வைகாசி 18, ஞாயிறு)</span>
+                                    <span class="w-24 text-slate-500 font-bold shrink-0">பிறந்த தேதி:</span>
+                                    <span id="lbl-dob" class="font-semibold text-slate-800 direct-editable flex-1" contenteditable="true">01-06-1997 (வைகாசி 18, ஞாயிறு)</span>
                                 </div>
                                 <div class="flex items-center space-x-2 text-slate-900">
-                                    <span class="w-24 text-slate-500 font-bold">பிறந்த நேரம்:</span>
-                                    <span id="lbl-tob" class="font-mono font-semibold text-slate-805">09:37 AM</span>
+                                    <span class="w-24 text-slate-500 font-bold shrink-0">பிறந்த நேரம்:</span>
+                                    <span id="lbl-tob" class="font-mono font-semibold text-slate-805 direct-editable flex-1" contenteditable="true">09:37 AM</span>
                                 </div>
                                 <div class="flex items-center space-x-2 text-slate-900">
-                                    <span class="w-24 text-slate-500 font-bold">நட்சத்திரம்/ராசி:</span>
-                                    <span id="lbl-starRasi" class="font-semibold text-slate-800">ரேவதி 3-ஆம் பாதம், மீன ராசி</span>
+                                    <span class="w-24 text-slate-500 font-bold shrink-0">நட்சத்திரம்/ராசி:</span>
+                                    <span id="lbl-starRasi" class="font-semibold text-slate-800 direct-editable flex-1" contenteditable="true">ரேவதி 3-ஆம் பாதம், மீன ராசி</span>
                                 </div>
                                 <div class="flex items-center space-x-2 text-slate-900">
-                                    <span class="w-24 text-slate-500 font-bold">லக்னம்:</span>
-                                    <span id="lbl-lagnam" class="font-semibold text-slate-800">கடக லக்னம் (யோகம்: சௌபாக்யம்)</span>
+                                    <span class="w-24 text-slate-500 font-bold shrink-0">லக்னம்:</span>
+                                    <span id="lbl-lagnam" class="font-semibold text-slate-800 direct-editable flex-1" contenteditable="true">கடக லக்னம் (யோகம்: சௌபாக்யம்)</span>
                                 </div>
                                 <div class="flex items-center space-x-2 text-slate-900">
-                                    <span class="w-24 text-slate-500 font-bold">பிறந்த ஊர்:</span>
-                                    <span id="lbl-pob" class="font-semibold text-slate-800">உடுமலைப்பேட்டை (அமராவதி நகர்)</span>
+                                    <span class="w-24 text-slate-500 font-bold shrink-0">பிறந்த ஊர்:</span>
+                                    <span id="lbl-pob" class="font-semibold text-slate-800 direct-editable flex-1" contenteditable="true">உடுமலைப்பேட்டை (அமராவதி நகர்)</span>
                                 </div>
                             </div>
 
                             <div class="bg-amber-50/40 p-3 rounded-lg border border-amber-100/50 text-xs space-y-1">
-                                <div class="flex"><span class="w-24 font-bold text-slate-500">தந்தை பெயர்:</span> <span id="lbl-father" class="font-medium">M.மோகன்ராஜ்</span></div>
-                                <div class="flex"><span class="w-24 font-bold text-slate-500">தாயார் பெயர்:</span> <span id="lbl-mother" class="font-medium">M.ரேணுகா</span></div>
-                                <div class="flex"><span class="w-24 font-bold text-slate-500">உடன் பிறந்தோர்:</span> <span id="lbl-siblings" class="font-medium">தம்பி 1 (Brother)</span></div>
+                                <div class="flex items-center"><span class="w-24 font-bold text-slate-500 shrink-0">தந்தை பெயர்:</span> <span id="lbl-father" class="font-medium direct-editable flex-1" contenteditable="true">M.மோகன்ராஜ்</span></div>
+                                <div class="flex items-center"><span class="w-24 font-bold text-slate-500 shrink-0">தாயார் பெயர்:</span> <span id="lbl-mother" class="font-medium direct-editable flex-1" contenteditable="true">M.ரேணுகா</span></div>
+                                <div class="flex items-center"><span class="w-24 font-bold text-slate-500 shrink-0">உடன் பிறந்தோர்:</span> <span id="lbl-siblings" class="font-medium direct-editable flex-1" contenteditable="true">தம்பி 1 (Brother)</span></div>
                             </div>
                         </div>
 
@@ -435,57 +454,57 @@
                                 <!-- Row 1 -->
                                 <div class="border border-red-800/80 p-1 flex flex-col justify-between">
                                     <span class="text-[9px] text-slate-400 font-normal">மீனம்</span>
-                                    <div id="cell-rasi-meenam" class="text-center text-slate-800 font-bold leading-tight">சந், சனி, கேது</div>
+                                    <div id="cell-rasi-meenam" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true">சந், சனி, கேது</div>
                                 </div>
                                 <div class="border border-red-800/80 p-1 flex flex-col justify-between">
                                     <span class="text-[9px] text-slate-400 font-normal">மேஷம்</span>
-                                    <div id="cell-rasi-mesham" class="text-center text-slate-800 font-bold leading-tight">புதன்</div>
+                                    <div id="cell-rasi-mesham" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true">புதன்</div>
                                 </div>
                                 <div class="border border-red-800/80 p-1 flex flex-col justify-between">
                                     <span class="text-[9px] text-slate-400 font-normal">ரிஷபம்</span>
-                                    <div id="cell-rasi-rishabam" class="text-center text-slate-800 font-bold leading-tight">சூரியன்</div>
+                                    <div id="cell-rasi-rishabam" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true">சூரியன்</div>
                                 </div>
                                 <div class="border border-red-800/80 p-1 flex flex-col justify-between">
                                     <span class="text-[9px] text-slate-400 font-normal">மிதுனம்</span>
-                                    <div id="cell-rasi-mithunam" class="text-center text-slate-800 font-bold leading-tight">சுக்கிரன்</div>
+                                    <div id="cell-rasi-mithunam" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true">சுக்கிரன்</div>
                                 </div>
                                 <!-- Row 2 -->
                                 <div class="border border-red-800/80 p-1 flex flex-col justify-between">
                                     <span class="text-[9px] text-slate-400 font-normal">கும்பம்</span>
-                                    <div id="cell-rasi-kumbam" class="text-center text-slate-800 font-bold leading-tight"></div>
+                                    <div id="cell-rasi-kumbam" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true"></div>
                                 </div>
                                 <div class="col-span-2 row-span-2 flex items-center justify-center border border-red-800 bg-amber-50/20">
                                     <span class="text-base font-black text-red-800 tracking-wider font-serif">இராசி</span>
                                 </div>
                                 <div class="border border-red-800/80 p-1 flex flex-col justify-between">
                                     <span class="text-[9px] text-slate-400 font-normal">கடகம்</span>
-                                    <div id="cell-rasi-kadagam" class="text-center font-extrabold text-blue-600 leading-tight">லக்னம்</div>
+                                    <div id="cell-rasi-kadagam" class="text-center font-extrabold text-blue-600 leading-tight direct-editable" contenteditable="true">லக்னம்</div>
                                 </div>
                                 <!-- Row 3 -->
                                 <div class="border border-red-800/80 p-1 flex flex-col justify-between">
                                     <span class="text-[9px] text-slate-400 font-normal">மகரம்</span>
-                                    <div id="cell-rasi-magaram" class="text-center text-slate-800 font-bold leading-tight">குரு</div>
+                                    <div id="cell-rasi-magaram" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true">குரு</div>
                                 </div>
                                 <div class="border border-red-800/80 p-1 flex flex-col justify-between">
                                     <span class="text-[9px] text-slate-400 font-normal">சிம்மம்</span>
-                                    <div id="cell-rasi-simmam" class="text-center text-slate-800 font-bold leading-tight">செவ்வாய்</div>
+                                    <div id="cell-rasi-simmam" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true">செவ்வாய்</div>
                                 </div>
                                 <!-- Row 4 -->
                                 <div class="border border-red-800/80 p-1 flex flex-col justify-between">
                                     <span class="text-[9px] text-slate-400 font-normal">தனுசு</span>
-                                    <div id="cell-rasi-dhanusu" class="text-center text-slate-800 font-bold leading-tight"></div>
+                                    <div id="cell-rasi-dhanusu" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true"></div>
                                 </div>
                                 <div class="border border-red-800/80 p-1 flex flex-col justify-between">
                                     <span class="text-[9px] text-slate-400 font-normal">விருச்சிகம்</span>
-                                    <div id="cell-rasi-viruchigam" class="text-center text-slate-800 font-bold leading-tight"></div>
+                                    <div id="cell-rasi-viruchigam" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true"></div>
                                 </div>
                                 <div class="border border-red-800/80 p-1 flex flex-col justify-between">
                                     <span class="text-[9px] text-slate-400 font-normal">துலாம்</span>
-                                    <div id="cell-rasi-thulaam" class="text-center text-slate-500 font-bold leading-tight">மாந்தி</div>
+                                    <div id="cell-rasi-thulaam" class="text-center text-slate-500 font-bold leading-tight direct-editable" contenteditable="true">மாந்தி</div>
                                 </div>
                                 <div class="border border-red-800/80 p-1 flex flex-col justify-between">
                                     <span class="text-[9px] text-slate-400 font-normal">கன்னி</span>
-                                    <div id="cell-rasi-kanni" class="text-center text-slate-800 font-bold leading-tight">ராகு</div>
+                                    <div id="cell-rasi-kanni" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true">ராகு</div>
                                 </div>
                             </div>
                         </div>
@@ -497,57 +516,57 @@
                                 <!-- Row 1 -->
                                 <div class="border border-red-800/80 p-1 flex flex-col justify-between">
                                     <span class="text-[9px] text-slate-400 font-normal">மீனம்</span>
-                                    <div id="cell-navamsam-meenam" class="text-center text-slate-500 font-bold leading-tight">மாந்தி</div>
+                                    <div id="cell-navamsam-meenam" class="text-center text-slate-500 font-bold leading-tight direct-editable" contenteditable="true">மாந்தி</div>
                                 </div>
                                 <div class="border border-red-800/80 p-1 flex flex-col justify-between">
                                     <span class="text-[9px] text-slate-400 font-normal">மேஷம்</span>
-                                    <div id="cell-navamsam-mesham" class="text-center text-slate-800 font-bold leading-tight"></div>
+                                    <div id="cell-navamsam-mesham" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true"></div>
                                 </div>
                                 <div class="border border-red-800/80 p-1 flex flex-col justify-between">
                                     <span class="text-[9px] text-slate-400 font-normal">ரிஷபம்</span>
-                                    <div id="cell-navamsam-rishabam" class="text-center text-slate-800 font-bold leading-tight"></div>
+                                    <div id="cell-navamsam-rishabam" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true"></div>
                                 </div>
                                 <div class="border border-red-800/80 p-1 flex flex-col justify-between">
                                     <span class="text-[9px] text-slate-400 font-normal">மிதுனம்</span>
-                                    <div id="cell-navamsam-mithunam" class="text-center text-slate-800 font-bold leading-tight">சூரியன்</div>
+                                    <div id="cell-navamsam-mithunam" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true">சூரியன்</div>
                                 </div>
                                 <!-- Row 2 -->
                                 <div class="border border-red-800/80 p-1 flex flex-col justify-between">
                                     <span class="text-[9px] text-slate-400 font-normal">கும்பம்</span>
-                                    <div id="cell-navamsam-kumbam" class="text-center text-slate-800 font-bold leading-tight">சந், சனி</div>
+                                    <div id="cell-navamsam-kumbam" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true">சந், சனி</div>
                                 </div>
                                 <div class="col-span-2 row-span-2 flex items-center justify-center border border-red-800 bg-amber-50/20">
                                     <span class="text-base font-black text-red-800 tracking-wider font-serif">நவாம்சம்</span>
                                 </div>
                                 <div class="border border-red-800/80 p-1 flex flex-col justify-between">
                                     <span class="text-[9px] text-slate-400 font-normal">கடகம்</span>
-                                    <div id="cell-navamsam-kadagam" class="text-center text-slate-800 font-bold leading-tight">கேது</div>
+                                    <div id="cell-navamsam-kadagam" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true">கேது</div>
                                 </div>
                                 <!-- Row 3 -->
                                 <div class="border border-red-800/80 p-1 flex flex-col justify-between">
                                     <span class="text-[9px] text-slate-400 font-normal">மகரம்</span>
-                                    <div id="cell-navamsam-magaram" class="text-center text-slate-800 font-bold leading-tight">ராகு</div>
+                                    <div id="cell-navamsam-magaram" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true">ராகு</div>
                                 </div>
                                 <div class="border border-red-800/80 p-1 flex flex-col justify-between">
                                     <span class="text-[9px] text-slate-400 font-normal">சிம்மம்</span>
-                                    <div id="cell-navamsam-simmam" class="text-center text-slate-800 font-bold leading-tight"></div>
+                                    <div id="cell-navamsam-simmam" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true"></div>
                                 </div>
                                 <!-- Row 4 -->
                                 <div class="border border-red-800/80 p-1 flex flex-col justify-between">
                                     <span class="text-[9px] text-slate-400 font-normal">தனுசு</span>
-                                    <div id="cell-navamsam-dhanusu" class="text-center text-slate-800 font-bold leading-tight">செவ்வாய்</div>
+                                    <div id="cell-navamsam-dhanusu" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true">செவ்வாய்</div>
                                 </div>
                                 <div class="border border-red-800/80 p-1 flex flex-col justify-between">
                                     <span class="text-[9px] text-slate-400 font-normal">விருச்சிகம்</span>
-                                    <div id="cell-navamsam-viruchigam" class="text-center text-slate-800 font-bold leading-tight">புதன்</div>
+                                    <div id="cell-navamsam-viruchigam" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true">புதன்</div>
                                 </div>
                                 <div class="border border-red-800/80 p-1 flex flex-col justify-between">
                                     <span class="text-[9px] text-slate-400 font-normal">துலாம்</span>
-                                    <div id="cell-navamsam-thulaam" class="text-center text-slate-800 font-bold leading-tight">சுக்கிரன்</div>
+                                    <div id="cell-navamsam-thulaam" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true">சுக்கிரன்</div>
                                 </div>
                                 <div class="border border-red-800/80 p-1 flex flex-col justify-between">
                                     <span class="text-[9px] text-slate-400 font-normal">கன்னி</span>
-                                    <div id="cell-navamsam-kanni" class="text-center text-slate-800 font-bold leading-tight">குரு, ல</div>
+                                    <div id="cell-navamsam-kanni" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true">குரு, ல</div>
                                 </div>
                             </div>
                         </div>
@@ -558,16 +577,18 @@
                     <div class="grid grid-cols-2 gap-6 bg-amber-50/70 p-4 rounded-xl border border-amber-100 z-10 relative text-[11px] leading-relaxed">
                         <div class="space-y-1.5">
                             <h5 class="font-bold text-red-800 border-b border-amber-200 pb-0.5"><i class="fa-solid fa-house-chimney mr-1"></i> சொத்து மற்றும் தொழில் விபரம்</h5>
-                            <p class="text-slate-750"><span class="font-bold">சொத்துக்கள்:</span> <span id="lbl-assets">சொந்த வீடு, சொந்த பைபர் கேபிள் சர்வீஸ்</span></p>
-                            <p class="text-slate-750"><span class="font-bold">வேலை:</span> <span id="lbl-job">TNEB (அரசுப் பணி)</span></p>
-                            <p class="text-slate-750"><span class="font-bold">மாத வருமானம்:</span> <span id="lbl-income">ரூ. 50,000/-</span></p>
+                            <p class="text-slate-750 flex items-center"><span class="font-bold shrink-0">சொத்துக்கள்:&nbsp;</span> <span id="lbl-assets" class="direct-editable flex-1 text-slate-800" contenteditable="true">சொந்த வீடு, சொந்த பைபர் கேபிள் சர்வீஸ்</span></p>
+                            <p class="text-slate-750 flex items-center"><span class="font-bold shrink-0">வேலை:&nbsp;</span> <span id="lbl-job" class="direct-editable flex-1 text-slate-800" contenteditable="true">TNEB (அரசுப் பணி)</span></p>
+                            <p class="text-slate-750 flex items-center"><span class="font-bold shrink-0">மாத வருமானம்:&nbsp;</span> <span id="lbl-income" class="direct-editable flex-1 text-slate-800" contenteditable="true">ரூ. 50,000/-</span></p>
                         </div>
                         <div class="space-y-1.5">
                             <h5 class="font-bold text-red-800 border-b border-amber-200 pb-0.5"><i class="fa-solid fa-calendar-check mr-1"></i> திசை இருப்பு விபரம்</h5>
-                            <p id="lbl-dasha" class="text-slate-750">பிறப்பில் புதன் திசை இருப்பு: 7 வரு 2 மா 21 நா. 22-08-2027 அன்றுடன் சுக்கிர திசையில் சனி புக்தி முடிவுறும்</p>
-                            <p class="text-slate-750 font-bold text-slate-800 flex items-center gap-1.5 mt-1 bg-amber-100/40 p-1 rounded">
-                                <i class="fa-solid fa-phone text-red-700"></i> தொடர்பு எண்: <span id="lbl-phone">9442008538</span>
-                            </p>
+                            <div class="text-slate-750 mb-1">
+                                <span id="lbl-dasha" class="direct-editable block text-slate-800" contenteditable="true">பிறப்பில் புதன் திசை இருப்பு: 7 வரு 2 மா 21 நா. 22-08-2027 அன்றுடன் சுக்கிர திசையில் சனி புக்தி முடிவுறும்</span>
+                            </div>
+                            <div class="text-slate-750 font-bold text-slate-800 flex items-center gap-1.5 mt-1 bg-amber-100/40 p-1 rounded">
+                                <i class="fa-solid fa-phone text-red-700 shrink-0"></i> தொடர்பு எண்: <span id="lbl-phone" class="direct-editable text-slate-900" contenteditable="true">9442008538</span>
+                            </div>
                         </div>
                     </div>
 
@@ -690,9 +711,10 @@
         window.addEventListener('load', () => {
             initInteractiveLayers();
             initZodiacEditorInputs();
+            initDirectEditingSync();
             syncStateToUI();
             updateControlUI();
-            showToast("வரவேற்கிறோம்! கோப்புகளைப் பதிவேற்றி AI மூலம் தானாகத் திருத்துங்கள்.", "info");
+            showToast("வரவேற்கிறோம்! ஏதேனும் விவரங்களை நேரடியாக ஜாதகத் தாளின் மேல் கிளிக் செய்தும் திருத்தலாம்.", "success");
         });
 
         // Toast Notification Function
@@ -825,9 +847,9 @@
                         cellEl.innerText = astrologyState[chartType][house];
                         // Highlight Lagnam
                         if (astrologyState[chartType][house].includes('லக்னம்') || astrologyState[chartType][house].includes('ல')) {
-                            cellEl.className = "text-center font-extrabold text-blue-600 leading-tight";
+                            cellEl.className = "text-center font-extrabold text-blue-600 leading-tight direct-editable";
                         } else {
-                            cellEl.className = "text-center text-slate-800 font-bold leading-tight";
+                            cellEl.className = "text-center text-slate-800 font-bold leading-tight direct-editable";
                         }
                     }
                 }
@@ -838,7 +860,7 @@
         function updateFieldState(prop, value) {
             detailsState[prop] = value;
             const displayEl = document.getElementById(`lbl-${prop}`);
-            if (displayEl) displayEl.innerText = value;
+            if (displayEl && displayEl.innerText !== value) displayEl.innerText = value;
         }
 
         // Initialize Zodiac input controls in Sidebar Tab 3
@@ -874,6 +896,54 @@
             syncZodiacInputsToState();
         }
 
+        // Setup direct click-to-edit listener bindings on A4 Sheet elements
+        function initDirectEditingSync() {
+            // Bind textual fields
+            const editableFields = [
+                'subdeity', 'caste', 'name', 'dob', 'tob', 'starRasi', 'lagnam', 'pob', 
+                'father', 'mother', 'siblings', 'assets', 'job', 'income', 'dasha', 'phone'
+            ];
+
+            editableFields.forEach(field => {
+                const displayEl = document.getElementById(`lbl-${field}`);
+                if (displayEl) {
+                    displayEl.addEventListener('input', () => {
+                        const val = displayEl.innerText;
+                        detailsState[field] = val;
+                        const inputEl = document.getElementById(`edit-${field}`);
+                        if (inputEl) inputEl.value = val;
+                    });
+                }
+            });
+
+            // Bind astrological cells
+            ['rasi', 'navamsam'].forEach(chartType => {
+                const houses = ['meenam', 'mesham', 'rishabam', 'mithunam', 'kumbam', 'kadagam', 'magaram', 'simmam', 'dhanusu', 'viruchigam', 'thulaam', 'kanni'];
+                houses.forEach(house => {
+                    const cellEl = document.getElementById(`cell-${chartType}-${house}`);
+                    if (cellEl) {
+                        cellEl.addEventListener('input', () => {
+                            const val = cellEl.innerText;
+                            astrologyState[chartType][house] = val;
+                            
+                            // Highlight L / Lagnam dynamically
+                            if (val.includes('லக்னம்') || val.includes('ல')) {
+                                cellEl.className = "text-center font-extrabold text-blue-600 leading-tight direct-editable";
+                            } else {
+                                cellEl.className = "text-center text-slate-800 font-bold leading-tight direct-editable";
+                            }
+
+                            // Sync to sidebar input if currently focused on this chart
+                            if (focusedChart === chartType) {
+                                const inputEl = document.getElementById(`ast-input-${house}`);
+                                if (inputEl) inputEl.value = val;
+                            }
+                        });
+                    }
+                });
+            });
+        }
+
         // Switch Chart Focus (Rasi vs Navamsam)
         function setChartFocus(focus) {
             focusedChart = focus;
@@ -902,9 +972,9 @@
             if (displayEl) {
                 displayEl.innerText = value;
                 if (value.includes('லக்னம்') || value.includes('ல')) {
-                    displayEl.className = "text-center font-extrabold text-blue-600 leading-tight";
+                    displayEl.className = "text-center font-extrabold text-blue-600 leading-tight direct-editable";
                 } else {
-                    displayEl.className = "text-center text-slate-800 font-bold leading-tight";
+                    displayEl.className = "text-center text-slate-800 font-bold leading-tight direct-editable";
                 }
             }
         }
