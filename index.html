@@ -72,13 +72,13 @@
                 <i class="fa-solid fa-wand-magic-sparkles text-xl"></i>
             </div>
             <div>
-                <h1 class="text-xl font-bold tracking-wide">ஜாதக புகைப்பட இணைப்பான் <span class="text-amber-500 text-xs font-normal">v3.0 (Lite Edition)</span></h1>
-                <p class="text-xs text-slate-400">நபர் புகைப்படத்தை அப்லோடு செய்து அளவுகளை மட்டும் மாற்றுங்கள்!</p>
+                <h1 class="text-xl font-bold tracking-wide">ஜாதக புகைப்பட இணைப்பான் <span class="text-amber-500 text-xs font-normal">v3.5 (Precision Edition)</span></h1>
+                <p class="text-xs text-slate-400">பிரேமிற்குள் இருக்கும் போட்டோவை மட்டும் தனியாக நகர்த்தும் வசதி!</p>
             </div>
         </div>
         <div class="flex items-center space-x-4">
             <span class="text-xs bg-slate-800 px-3 py-1.5 rounded-full text-amber-400 font-semibold border border-amber-500/20">
-                <i class="fa-solid fa-circle-check mr-1.5"></i> நேரடி எடிட்டிங் & அளவுகள் மட்டும்
+                <i class="fa-solid fa-circle-check mr-1.5"></i> நேரடி எடிட்டிங் & உள்-படம் நகர்த்தல்
             </span>
         </div>
     </header>
@@ -114,9 +114,9 @@
             <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-4">
                 <div class="flex justify-between items-center border-b border-slate-800 pb-2">
                     <h3 class="text-xs font-bold text-amber-450 uppercase tracking-wider">
-                        <i class="fa-solid fa-arrows-up-down-left-right mr-2 text-amber-500"></i>புகைப்பட அளவு (Coordinates)
+                        <i class="fa-solid fa-arrows-up-down-left-right mr-2 text-amber-500"></i>பிரேம் அளவு (Frame)
                     </h3>
-                    <span class="text-[9px] bg-indigo-500/25 text-indigo-300 border border-indigo-500/30 px-2 py-0.5 rounded font-mono font-bold">அளவு மாற்றி</span>
+                    <span class="text-[9px] bg-indigo-500/25 text-indigo-300 border border-indigo-500/30 px-2 py-0.5 rounded font-mono font-bold">பிரேம் கண்ட்ரோல்</span>
                 </div>
 
                 <!-- Sliders for precise coordinates -->
@@ -163,6 +163,43 @@
                 </div>
             </div>
 
+            <!-- Inner Image Adjustment Settings -->
+            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-4">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                    <h3 class="text-xs font-bold text-amber-450 uppercase tracking-wider">
+                        <i class="fa-solid fa-image mr-2 text-amber-500"></i>பிரேமிற்குள் படம் மாற்றி (Inner Image)
+                    </h3>
+                    <span class="text-[9px] bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded font-mono font-bold">உள்-படம்</span>
+                </div>
+
+                <!-- Sliders for inner image crop/zoom/pan adjustments -->
+                <div class="space-y-4 text-xs">
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-slate-400 font-medium">படம் பெரிதாக்கு (Zoom)</span>
+                            <span id="val-zoom" class="font-mono text-amber-400">100%</span>
+                        </div>
+                        <input type="range" id="slider-zoom" min="100" max="300" value="100" class="w-full accent-amber-500 bg-slate-800 h-1.5 rounded-lg appearance-none cursor-pointer" oninput="updatePhotoCoordinate('zoom', this.value)">
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-slate-400 font-medium">படம் நகர்த்துக X (Pan X)</span>
+                            <span id="val-panX" class="font-mono text-amber-400">0px</span>
+                        </div>
+                        <input type="range" id="slider-panX" min="-150" max="150" value="0" class="w-full accent-amber-500 bg-slate-800 h-1.5 rounded-lg appearance-none cursor-pointer" oninput="updatePhotoCoordinate('panX', this.value)">
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-slate-400 font-medium">படம் நகர்த்துக Y (Pan Y)</span>
+                            <span id="val-panY" class="font-mono text-amber-400">0px</span>
+                        </div>
+                        <input type="range" id="slider-panY" min="-150" max="150" value="0" class="w-full accent-amber-500 bg-slate-800 h-1.5 rounded-lg appearance-none cursor-pointer" oninput="updatePhotoCoordinate('panY', this.value)">
+                    </div>
+                </div>
+            </div>
+
             <!-- Export Buttons -->
             <div class="pt-4 space-y-2.5">
                 <button onclick="downloadOutput('image')" class="w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold rounded-xl shadow-lg hover:shadow-amber-500/10 active:scale-[0.98] transition duration-200 text-sm">
@@ -204,7 +241,7 @@
                     </div>
 
                     <!-- Helper Tip (Only visible on browser screen, hidden during print/render) -->
-                    <div class="absolute top-2 left-6 text-[10px] text-amber-700 bg-amber-100/60 px-2 py-1 rounded font-medium border border-amber-200/55 pointer-events-none" id="edit-tip-banner">
+                    <div class="absolute top-2 left-6 text-[10px] text-amber-770 bg-amber-100/80 px-2 py-1 rounded font-medium border border-amber-200/55 pointer-events-none" id="edit-tip-banner">
                         <i class="fa-solid fa-circle-info mr-1"></i> ஏதேனும் விவரங்களை நேரடியாகக் கிளிக் செய்து டைப் செய்து மாற்றலாம்!
                     </div>
 
@@ -257,9 +294,10 @@
                                 <i class="fa-regular fa-image text-3xl mb-2 text-slate-350"></i>
                                 <p class="text-[9px]">போட்டோவை அப்லோடு செய்து மவுஸால் நகர்த்தவும்</p>
                             </div>
-                            <!-- Interactive Photo Layer -->
+                            <!-- Interactive Photo Layer with Overflow Hidden -->
                             <div id="interactive-photo" class="absolute cursor-move overflow-hidden border-2 border-amber-700/80 shadow-md active-layer" style="top: 15px; left: 20px; width: 170px; height: 210px; border-radius: 8px;">
-                                <img id="user-photo-img" src="" alt="Photo" class="w-full h-full object-cover hidden">
+                                <!-- Inner Image which can be scaled and panned inside its container frame -->
+                                <img id="user-photo-img" src="" alt="Photo" class="w-full h-full object-cover hidden transition-none">
                                 <div class="w-full h-full flex items-center justify-center bg-slate-100 text-slate-400" id="no-photo-p">
                                     <span class="text-[10px] font-bold">போட்டோ பகுதி</span>
                                 </div>
@@ -417,7 +455,7 @@
 
                     <!-- Printer Branding Footer -->
                     <div class="text-right text-[10px] text-slate-500 font-bold italic z-10 relative px-4 mt-1 flex justify-end">
-                        <span id="lbl-printer" class="direct-editable text-red-850" contenteditable="true">ரவி பிரிண்டர் உடுமலை,,</span>
+                        <span id="lbl-printer" class="direct-editable text-red-850" contenteditable="true">ரவி அச்சகம், உடுமலை.</span>
                     </div>
 
                 </div>
@@ -430,25 +468,44 @@
     <script>
         // Coordinates States
         const coordinates = {
-            photo: { x: 20, y: 15, w: 170, h: 210, radius: 8 }
+            photo: { 
+                x: 20, 
+                y: 15, 
+                w: 170, 
+                h: 210, 
+                radius: 8,
+                zoom: 100, // Zoom percentage of the inner image
+                panX: 0,   // Pan offset in px inside the container
+                panY: 0    // Pan offset in px inside the container
+            }
         };
 
         // DOM element references
         const templatePhoto = document.getElementById('interactive-photo');
+        const userPhotoImg = document.getElementById('user-photo-img');
 
         const sliderX = document.getElementById('slider-x');
         const sliderY = document.getElementById('slider-y');
         const sliderW = document.getElementById('slider-w');
         const sliderH = document.getElementById('slider-h');
         const sliderRadius = document.getElementById('slider-radius');
+        
+        // Inner Image Adjustment DOM elements
+        const sliderZoom = document.getElementById('slider-zoom');
+        const sliderPanX = document.getElementById('slider-panX');
+        const sliderPanY = document.getElementById('slider-panY');
 
         const valX = document.getElementById('val-x');
         const valY = document.getElementById('val-y');
         const valW = document.getElementById('val-w');
         const valH = document.getElementById('val-h');
         const valRadius = document.getElementById('val-radius');
+        
+        const valZoom = document.getElementById('val-zoom');
+        const valPanX = document.getElementById('val-panX');
+        const valPanY = document.getElementById('val-panY');
 
-        // Drag states
+        // Drag states for Frame
         let isDragging = false;
         let startX, startY;
         let dragTarget = null;
@@ -457,7 +514,7 @@
         window.addEventListener('load', () => {
             initInteractiveLayers();
             updateControlUI();
-            showToast("படிவ விவரங்களை மாற்றுவதற்கு அவற்றின் மேல் நேரடியாகக் கிளிக் செய்து டைப் செய்யவும்.", "info");
+            showToast("பிரேமிற்குள் இருக்கும் போட்டோவை நகர்த்த 'Pan X & Y' ஸ்லைடர்களைப் பயன்படுத்துங்கள்.", "success");
         });
 
         // Toast Notification Function
@@ -489,7 +546,7 @@
             // Auto-dismiss
             setTimeout(() => {
                 toast.classList.add('translate-x-12', 'opacity-0');
-                setTimeout(() => { toast.remove(); }, 300);
+                setTimeout(() => { toast.remove(); }, 5000);
             }, 5000);
         }
 
@@ -506,11 +563,16 @@
                 document.getElementById('file2-label').innerHTML = `<i class="fa-solid fa-circle-check mr-2 text-emerald-400"></i> நபர் படம் அப்லோடு செய்யப்பட்டுள்ளது`;
 
                 // Update Photo Layer
-                const templateUserImg = document.getElementById('user-photo-img');
-                templateUserImg.src = imgData;
-                templateUserImg.classList.remove('hidden');
+                userPhotoImg.src = imgData;
+                userPhotoImg.classList.remove('hidden');
                 document.getElementById('no-photo-p').classList.add('hidden');
                 document.getElementById('avatar-helper-text').classList.add('hidden');
+
+                // Reset inside transform values on new upload
+                coordinates.photo.zoom = 100;
+                coordinates.photo.panX = 0;
+                coordinates.photo.panY = 0;
+                updateControlUI();
 
                 showToast("நபரின் புகைப்படம் வெற்றிகரமாக ஏற்றப்பட்டது. ஸ்லைடர்களைப் பயன்படுத்தி நகர்த்திக் கொள்ளலாம்.", "success");
             };
@@ -568,6 +630,7 @@
 
         // Apply visual coordinates inline on DOM elements
         function applyStyles(element, coords) {
+            // Reposition the frame
             element.style.left = coords.x + 'px';
             element.style.top = coords.y + 'px';
             element.style.width = coords.w + 'px';
@@ -575,23 +638,41 @@
             if (coords.radius !== undefined) {
                 element.style.borderRadius = coords.radius + 'px';
             }
+
+            // Reposition/transform the inner image
+            if (userPhotoImg) {
+                const scaleVal = coords.zoom / 100;
+                userPhotoImg.style.transform = `scale(${scaleVal}) translate(${coords.panX}px, ${coords.panY}px)`;
+                userPhotoImg.style.transformOrigin = 'center center';
+            }
         }
 
         // Update Slider UI controls
         function updateControlUI() {
             const currentCoords = coordinates.photo;
             
+            // Sync Frame Slider Positions
             sliderX.value = currentCoords.x;
             sliderY.value = currentCoords.y;
             sliderW.value = currentCoords.w;
             sliderH.value = currentCoords.h;
-            sliderRadius.value = currentCoords.radius !== undefined ? currentCoords.radius : 0;
+            sliderRadius.value = currentCoords.radius;
+            
+            // Sync Inner Image Slider Positions
+            sliderZoom.value = currentCoords.zoom;
+            sliderPanX.value = currentCoords.panX;
+            sliderPanY.value = currentCoords.panY;
 
+            // Sync Text Values
             valX.textContent = currentCoords.x + 'px';
             valY.textContent = currentCoords.y + 'px';
             valW.textContent = currentCoords.w + 'px';
             valH.textContent = currentCoords.h + 'px';
-            valRadius.textContent = (currentCoords.radius !== undefined ? currentCoords.radius : 0) + 'px';
+            valRadius.textContent = currentCoords.radius + 'px';
+            
+            valZoom.textContent = currentCoords.zoom + '%';
+            valPanX.textContent = currentCoords.panX + 'px';
+            valPanY.textContent = currentCoords.panY + 'px';
 
             applyStyles(templatePhoto, currentCoords);
         }
