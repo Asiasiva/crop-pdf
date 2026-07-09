@@ -140,12 +140,13 @@
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-            padding: 4px;
+            padding: 6px 4px 8px 4px; /* Added top and bottom padding for safe border spacing */
             font-size: 11px;
             font-weight: 500;
             color: #1e293b;
             position: relative;
-            min-height: 48px;
+            min-height: 52px; /* Spacing adjusted to give text more breathing room */
+            box-sizing: border-box;
             transition: all 0.3s ease;
         }
         .astro-center {
@@ -461,31 +462,27 @@
                                 </div>
                                 <div class="flex items-baseline">
                                     <span class="font-bold theme-text-primary w-28 shrink-0">பிறந்த தேதி:</span>
-                                    <span class="direct-editable text-slate-800 border-b border-dashed border-slate-300 flex-1" contenteditable="true">15-08-1998 </span>
+                                    <span class="direct-editable text-slate-800 border-b border-dashed border-slate-300 flex-1" contenteditable="true">15-08-1998 (வயது 27)</span>
                                 </div>
                                 <div class="flex items-baseline">
                                     <span class="font-bold theme-text-primary w-28 shrink-0">பிறந்த நேரம்:</span>
-                                    <span class="direct-editable text-slate-800 border-b border-dashed border-slate-300 flex-1" contenteditable="true">காலை 08:45 மணி </span>
+                                    <span class="direct-editable text-slate-800 border-b border-dashed border-slate-300 flex-1" contenteditable="true">காலை 08:45 மணி அளவில்</span>
                                 </div>
                                 <div class="flex items-baseline">
                                     <span class="font-bold theme-text-primary w-28 shrink-0">பிறந்த இடம்:</span>
-                                    <span class="direct-editable text-slate-800 border-b border-dashed border-slate-300 flex-1" contenteditable="true"></span>
-                                </div>
-                                <div class="flex items-baseline">
-                                    <span class="font-bold theme-text-primary w-28 shrink-0">சாதி:</span>
-                                    <span class="direct-editable text-slate-800 border-b border-dashed border-slate-300 flex-1" contenteditable="true"></span>
+                                    <span class="direct-editable text-slate-800 border-b border-dashed border-slate-300 flex-1" contenteditable="true">மதுரை, தமிழ்நாடு</span>
                                 </div>
                                 <div class="flex items-baseline">
                                     <span class="font-bold theme-text-primary w-28 shrink-0">குலம்:</span>
-                                    <span class="direct-editable text-slate-800 border-b border-dashed border-slate-300 flex-1" contenteditable="true"></span>
+                                    <span class="direct-editable text-slate-800 border-b border-dashed border-slate-300 flex-1" contenteditable="true">இந்து, வெள்ளாளர்</span>
+                                </div>
+                                <div class="flex items-baseline">
+                                    <span class="font-bold theme-text-primary w-28 shrink-0">நட்சத்திரம:</span>
+                                    <span class="direct-editable text-slate-800 border-b border-dashed border-slate-300 flex-1" contenteditable="true">பரணி, 2-ம் பாதம்</span>
                                 </div>
                                 <div class="flex items-baseline">
                                     <span class="font-bold theme-text-primary w-28 shrink-0">ராசி / லக்னம்:</span>
-                                    <span class="direct-editable text-slate-800 border-b border-dashed border-slate-300 flex-1" contenteditable="true">துலாம் ராசி | ரிஷப லக்னம்</span>
-                                </div>
-                                <div class="flex items-baseline">
-                                    <span class="font-bold theme-text-primary w-28 shrink-0">நட்சத்திரம்:</span>
-                                    <span class="direct-editable text-slate-800 border-b border-dashed border-slate-300 flex-1" contenteditable="true">சுவாதி</span>
+                                    <span class="direct-editable text-slate-800 border-b border-dashed border-slate-300 flex-1" contenteditable="true">மேஷ ராசி, கன்னி லக்னம்</span>
                                 </div>
                             </div>
                             
@@ -516,7 +513,7 @@
                                 </div>
                                 <div class="flex items-baseline col-span-2">
                                     <span class="font-bold theme-text-primary w-28 shrink-0">உடன்பிறந்தோர்:</span>
-                                    <span class="direct-editable text-slate-800 border-b border-dashed border-slate-300 flex-1" contenteditable="true">ஒரு தம்பி</span>
+                                    <span class="direct-editable text-slate-800 border-b border-dashed border-slate-300 flex-1" contenteditable="true">தம்பி 1</span>
                                 </div>
                             </div>
                         </div>
@@ -556,7 +553,7 @@
                             </div>
                             <div class="col-span-12 flex items-center gap-2 mt-0.5">
                                 <span class="font-bold theme-text-primary shrink-0">தொடர்பு எண்:</span>
-                                <span class="direct-editable text-slate-850 font-bold border-b border-dashed border-slate-300 flex-1" contenteditable="true">9876543210, 9876501234 (வாட்ஸ்அப் எண்)</span>
+                                <span class="direct-editable text-slate-850 font-bold border-b border-dashed border-slate-300 flex-1" contenteditable="true">9876543210, 9876501234</span>
                             </div>
                             <div class="col-span-12 text-center text-[10px] text-slate-500 italic mt-1.5" contenteditable="true">
                                 குறிப்பு: ஜாதகப் பொருத்தம் மற்றும் மேலதிக விவரங்களுக்கு மேற்கண்ட எண்களைத் தொடர்பு கொள்ளவும்.
@@ -820,11 +817,11 @@
                     cellDiv.onclick = () => openPlanetSelector(gridId, cell.index, cell.name);
 
                     const nameLabel = document.createElement('span');
-                    nameLabel.className = "text-[9px] text-slate-400 select-none pointer-events-none";
+                    nameLabel.className = "text-[9px] text-slate-400 select-none pointer-events-none mt-0.5"; // Added margin-top to separate from top border
                     nameLabel.textContent = cell.name;
 
                     const planetDisplay = document.createElement('span');
-                    planetDisplay.className = "text-center font-bold text-xs theme-text-primary mt-1 select-none pointer-events-none";
+                    planetDisplay.className = "text-center font-bold text-xs theme-text-primary mb-1 select-none pointer-events-none leading-tight"; // Added margin-bottom to clear bottom border
                     planetDisplay.textContent = dataArray[cell.index].join(', ') || '';
 
                     cellDiv.appendChild(nameLabel);
