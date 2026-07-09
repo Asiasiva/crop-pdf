@@ -484,6 +484,14 @@
                                     <span class="font-bold theme-text-primary w-28 shrink-0">ராசி / லக்னம்:</span>
                                     <span class="direct-editable text-slate-800 border-b border-dashed border-slate-300 flex-1" contenteditable="true"></span>
                                 </div>
+                                <div class="flex items-baseline">
+                                    <span class="font-bold theme-text-primary w-28 shrink-0">உத்தியோகம்:</span>
+                                    <span class="direct-editable text-slate-800 border-b border-dashed border-slate-300 flex-1" contenteditable="true">மூத்த மென்பொருள் பொறியாளர் (MNC, சென்னை)</span>
+                                </div>
+                                <div class="flex items-baseline">
+                                    <span class="font-bold theme-text-primary w-28 shrink-0">மாத வருமானம்:</span>
+                                    <span class="direct-editable text-slate-800 border-b border-dashed border-slate-300 flex-1" contenteditable="true">ரூ. 1,20,000/-</span>
+                                </div>
                             </div>
                             
                             <!-- Empty spacer space for photo placeholder when top-right (Height set to 273px to prevent overlapping) -->
@@ -492,16 +500,8 @@
                             <!-- Row continuation (Full Width Details below photo area - Tightened padding) -->
                             <div class="col-span-12 grid grid-cols-2 gap-x-8 gap-y-2.5 pt-1">
                                 <div class="flex items-baseline">
-                                    <span class="font-bold theme-text-primary w-28 shrink-0">உத்தியோகம்:</span>
-                                    <span class="direct-editable text-slate-800 border-b border-dashed border-slate-300 flex-1" contenteditable="true">மூத்த மென்பொருள் பொறியாளர் (MNC, சென்னை)</span>
-                                </div>
-                                <div class="flex items-baseline">
                                     <span class="font-bold theme-text-primary w-28 shrink-0">தந்தை பெயர்:</span>
                                     <span class="direct-editable text-slate-800 border-b border-dashed border-slate-300 flex-1" contenteditable="true"></span>
-                                </div>
-                                <div class="flex items-baseline">
-                                    <span class="font-bold theme-text-primary w-28 shrink-0">மாத வருமானம்:</span>
-                                    <span class="direct-editable text-slate-800 border-b border-dashed border-slate-300 flex-1" contenteditable="true">ரூ. 1,20,000/-</span>
                                 </div>
                                 <div class="flex items-baseline">
                                     <span class="font-bold theme-text-primary w-28 shrink-0">தாய் பெயர்:</span>
@@ -519,13 +519,12 @@
                         </div>
 
                         <!-- 4. ASTROLOGICAL GRIDS (DYNAMICALLY LOADED WITH EMBEDDED HIGH-CONTRAST BORDERS) -->
-                        <div class="grid grid-cols-2 gap-8 my-2 relative z-10">
+                        <div class="grid grid-cols-2 gap-8 my-3 relative z-10">
                             
                             <!-- Rasi Grid Container -->
                             <div class="space-y-1.5 text-center">
-                                <div class="flex items-center justify-center gap-1.5 bg-red-100/80 py-1.5 rounded border-2 theme-border-secondary text-xs font-bold theme-text-primary shadow-sm">
-                                    <span contenteditable="true">ராசி கட்டம் (Rasi Grid)</span>
-                                    <i class="fa-solid fa-wand-magic-sparkles text-[10px]"></i>
+                                <div class="flex items-center justify-center bg-red-100/80 h-10 rounded border-2 theme-border-secondary text-xs font-bold theme-text-primary shadow-sm leading-none pb-1">
+                                    <span contenteditable="true" class="relative -top-[1px]">ராசி கட்டம்</span>
                                 </div>
                                 <div class="astrology-grid" id="rasi-grid">
                                     <!-- Populated Dynamically with JS -->
@@ -534,9 +533,8 @@
 
                             <!-- Navamsam Grid Container -->
                             <div class="space-y-1.5 text-center">
-                                <div class="flex items-center justify-center gap-1.5 bg-red-100/80 py-1.5 rounded border-2 theme-border-secondary text-xs font-bold theme-text-primary shadow-sm">
-                                    <span contenteditable="true">அம்ச கட்டம் (Navamsam Grid)</span>
-                                    <i class="fa-solid fa-wand-magic-sparkles text-[10px]"></i>
+                                <div class="flex items-center justify-center bg-red-100/80 h-10 rounded border-2 theme-border-secondary text-xs font-bold theme-text-primary shadow-sm leading-none pb-1">
+                                    <span contenteditable="true" class="relative -top-[1px]">அம்ச கட்டம்</span>
                                 </div>
                                 <div class="astrology-grid" id="navamsam-grid">
                                     <!-- Populated Dynamically with JS -->
@@ -545,7 +543,7 @@
 
                         </div>
 
-                        <!-- 5. DASHA BALANCE & FOOTER NOTES (LIFTED AND ADJUSTED SAFELY ABOVE THE DOUBLE BORDER) -->
+                        <!-- 5. DASHA BALANCE & FOOTER NOTES -->
                         <div class="border-t-2 theme-border-primary pt-2.5 mt-1 grid grid-cols-12 gap-1.5 text-xs relative z-10">
                             <div class="col-span-12 flex items-center gap-2">
                                 <span class="font-bold theme-text-primary shrink-0">பிறப்பு தசா இருப்பு:</span>
@@ -669,36 +667,36 @@
         let frameH = 273;
         let frameR = 8;
 
-        // Dynamic Astrology States (Rasi & Navamsam Grid Array Model)
+        // Dynamic Astrology States (Rasi & Navamsam Grid Array Model initialized empty)
         // Order mapped clockwise from Pisces to Aquarius (0 = Pisces, 1 = Aries... 11 = Aquarius)
         let rasiData = [
-            ["சனி"],                 // 0: Pisces (மீனம்)
-            ["ராகு", "செவ்"],        // 1: Aries (மேஷம்)
-            ["புதன்"],               // 2: Taurus (ரிஷபம்)
-            ["சூரி", "குரு"],        // 3: Gemini (மிதுனம்)
-            ["சுக்கிரன்"],            // 4: Cancer (கடகம்)
-            ["கேது"],                // 5: Leo (சிம்மம்)
-            [],                      // 6: Virgo (கன்னி)
-            [],                      // 7: Libra (துலாம்)
-            [],                      // 8: Scorpio (விருச்சிகம்)
-            ["சந்திரன்"],            // 9: Sagittarius (தனுசு)
-            ["லக்னம்"],              // 10: Capricorn (மகரம்)
-            []                       // 11: Aquarius (கும்பம்)
+            [],                      // 0: Pisces ()
+            [],                      // 1: Aries ()
+            [],                      // 2: Taurus ()
+            [],                      // 3: Gemini ()
+            [],                      // 4: Cancer ()
+            [],                      // 5: Leo ()
+            [],                      // 6: Virgo ()
+            [],                      // 7: Libra ()
+            [],                      // 8: Scorpio ()
+            [],                      // 9: Sagittarius ()
+            [],                      // 10: Capricorn ()
+            []                       // 11: Aquarius ()
         ];
 
         let navamsamData = [
-            ["புதன்"],               // 0: Pisces
-            ["லக்னம்"],              // 1: Aries
-            ["சனி"],                 // 2: Taurus
-            ["ராகு"],                // 3: Gemini
-            ["சூரியன்"],             // 4: Cancer
-            ["கேது", "குரு"],        // 5: Leo
+            [],                      // 0: Pisces
+            [],                      // 1: Aries
+            [],                      // 2: Taurus
+            [],                      // 3: Gemini
+            [],                      // 4: Cancer
+            [],                      // 5: Leo
             [],                      // 6: Virgo
-            ["சந்திரன்"],            // 7: Libra
-            ["செவ்"],                // 8: Scorpio
+            [],                      // 7: Libra
+            [],                      // 8: Scorpio
             [],                      // 9: Sagittarius
             [],                      // 10: Capricorn
-            ["சுக்கிரன்"]             // 11: Aquarius
+            []                       // 11: Aquarius
         ];
 
         // Backup for reset settings
@@ -788,19 +786,19 @@
 
             // South Indian traditional 4x4 layout mapping clockwise
             const cellLayout = [
-                { index: 0, name: "மீனம்" },
-                { index: 1, name: "மேஷம்" },
-                { index: 2, name: "ரிஷபம்" },
-                { index: 3, name: "மிதுனம்" },
-                { index: 11, name: "கும்பம்" },
+                { index: 0, name: "" },
+                { index: 1, name: "" },
+                { index: 2, name: "" },
+                { index: 3, name: "" },
+                { index: 11, name: "" },
                 { index: -1, isCenter: true }, // The 2x2 merged core
-                { index: 4, name: "கடகம்" },
-                { index: 10, name: "மகரம்" },
-                { index: 5, name: "சிம்மம்" },
-                { index: 9, name: "தனுசு" },
-                { index: 8, name: "விருச்சிகம்" },
-                { index: 7, name: "துலாம்" },
-                { index: 6, name: "கன்னி" }
+                { index: 4, name: "" },
+                { index: 10, name: "" },
+                { index: 5, name: "" },
+                { index: 9, name: "" },
+                { index: 8, name: "" },
+                { index: 7, name: "" },
+                { index: 6, name: "" }
             ];
 
             cellLayout.forEach(cell => {
