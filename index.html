@@ -3,738 +3,1293 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ஜாதக கோஆர்டினேட் இணைப்பான் - File 3 Creator</title>
-    <!-- Tailwind CSS for Premium UI -->
+    <title>ஜாதக கோஆர்டினேட் இணைப்பான் - File 3 Creator (Premium Border Edition)</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome for Icons -->
+    <!-- Google Fonts: Mukta Malar & Noto Sans Tamil -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mukta+Malar:wght@300;400;500;600;700&family=Noto+Sans+Tamil:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- html2canvas for Image Generation -->
+    <!-- html2canvas for High Resolution Image Export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <!-- jsPDF for PDF Generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        tamil: ['Mukta Malar', 'Noto Sans Tamil', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
     <style>
-        /* Custom scrollbar for control panels */
-        ::-webkit-scrollbar {
-            width: 6px;
+        :root {
+            --theme-primary: #991b1b;      /* Red */
+            --theme-secondary: #b91c1c;    /* Red Light */
+            --theme-bg-light: #fffdec;     /* Traditional yellow-white */
+            --theme-bg-tint: #fef2f2;      /* Light Red Tint */
+            --theme-border-color: #991b1b;
         }
-        ::-webkit-scrollbar-track {
-            background: #1e293b;
+
+        .theme-red {
+            --theme-primary: #991b1b;
+            --theme-secondary: #b91c1c;
+            --theme-bg-light: #fffdec;
+            --theme-bg-tint: #fef2f2;
+            --theme-border-color: #991b1b;
         }
-        ::-webkit-scrollbar-thumb {
-            background: #475569;
-            border-radius: 4px;
+
+        .theme-blue {
+            --theme-primary: #1e3a8a;      /* Navy Blue */
+            --theme-secondary: #2563eb;    /* Royal Blue */
+            --theme-bg-light: #f8fafc;     /* Clean ice-white */
+            --theme-bg-tint: #eff6ff;      /* Light Blue Tint */
+            --theme-border-color: #1e3a8a;
         }
-        /* Selection border for active canvas layer */
-        .active-layer {
-            outline: 2px dashed #f59e0b;
-            outline-offset: 2px;
+
+        .theme-green {
+            --theme-primary: #14532d;      /* Forest Green */
+            --theme-secondary: #16a34a;    /* Green Accent */
+            --theme-bg-light: #fcfdf5;     /* Eco white */
+            --theme-bg-tint: #f0fdf4;      /* Green Tint */
+            --theme-border-color: #14532d;
         }
-        /* Custom CSS to prevent text overflow in print styles */
-        .page-a4 {
-            width: 210mm;
-            height: 297mm;
-            min-width: 210mm;
-            min-height: 297mm;
-            background-color: white;
-            color: #0f172a;
-            position: relative;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            border-radius: 4px;
-            overflow: hidden;
-            transition: all 0.3s ease;
+
+        .theme-purple {
+            --theme-primary: #581c87;      /* Deep Purple */
+            --theme-secondary: #7e22ce;    /* Violet Accent */
+            --theme-bg-light: #fdfafe;     /* Soft Lavender White */
+            --theme-bg-tint: #faf5ff;      /* Purple Tint */
+            --theme-border-color: #581c87;
         }
-        /* Highlight style for directly editable text elements */
+
+        body {
+            font-family: 'Mukta Malar', 'Noto Sans Tamil', sans-serif;
+            background-color: #020617;
+        }
+
+        /* Applied dynamic theme bindings */
+        .theme-text-primary { color: var(--theme-primary) !important; }
+        .theme-text-secondary { color: var(--theme-secondary) !important; }
+        .theme-border-primary { border-color: var(--theme-primary) !important; }
+        .theme-border-secondary { border-color: var(--theme-secondary) !important; }
+        .theme-bg-light { background-color: var(--theme-bg-light) !important; }
+        .theme-bg-tint { background-color: var(--theme-bg-tint) !important; }
+
+        /* Premium double border style around the entire A4 sheet */
+        .premium-sheet-border {
+            border: 10px double var(--theme-primary) !important;
+            box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.9), 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            transition: border-color 0.3s ease;
+        }
+
+        /* Style for interactive editable fields */
         .direct-editable {
-            cursor: text;
-            border-bottom: 1px dashed transparent;
             transition: all 0.2s ease;
-            padding: 1px 4px;
-            border-radius: 4px;
+            outline: none;
+            border-bottom: 1px dashed transparent;
         }
         .direct-editable:hover {
-            border-bottom-color: #d97706; /* amber-600 */
-            background-color: rgba(217, 119, 6, 0.08);
+            border-bottom-color: #f59e0b;
+            background-color: rgba(245, 158, 11, 0.05);
+            cursor: text;
         }
         .direct-editable:focus {
-            outline: 2px solid #d97706;
-            background-color: rgba(217, 119, 6, 0.12);
-            border-bottom-color: transparent;
+            border-bottom-color: #ef4444;
+            background-color: rgba(239, 68, 68, 0.08);
+            border-bottom-style: solid;
+        }
+
+        /* Beautiful custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+
+        /* South Indian Astrology Grid styling connected to CSS variables */
+        .astrology-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            border: 3px solid var(--theme-border-color);
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            background-color: var(--theme-bg-light);
+            transition: all 0.3s ease;
+        }
+        .astro-cell {
+            border: 1.5px solid var(--theme-secondary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 4px;
+            font-size: 11px;
+            font-weight: 500;
+            color: #1e293b;
+            position: relative;
+            min-height: 48px;
+            transition: all 0.3s ease;
+        }
+        .astro-center {
+            grid-column: 2 / 4;
+            grid-row: 2 / 4;
+            background-color: var(--theme-bg-tint);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--theme-primary);
+            border: 1.5px solid var(--theme-secondary);
+            text-shadow: 1px 1px 0px rgba(255,255,255,0.8);
+            transition: all 0.3s ease;
+        }
+
+        /* Print sizing container */
+        #a4-wrapper {
+            transition: transform 0.2s ease-out;
+            transform-origin: top center;
+        }
+
+        /* Active overlay boundary */
+        .active-layer {
+            border: 2px dashed #f59e0b !important;
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+        }
+        .active-layer::after {
+            content: "✦ இழுக்கலாம்";
+            position: absolute;
+            bottom: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #f59e0b;
+            color: #000;
+            font-size: 9px;
+            font-weight: bold;
+            padding: 1px 6px;
+            border-radius: 4px;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        /* Hide element highlights when exporting */
+        .exporting .active-layer {
+            border: 3px solid var(--theme-primary) !important; /* Retain a solid clean border for photo on export */
+            box-shadow: none !important;
+        }
+        .exporting .active-layer::after {
+            display: none !important;
+        }
+        .exporting .direct-editable {
+            border-bottom: none !important;
+            background-color: transparent !important;
+        }
+
+        /* Form Range Custom Style */
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #ef4444;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.3);
         }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen font-sans flex flex-col">
+<body class="text-slate-100 min-h-screen flex flex-col font-tamil select-none">
 
-    <!-- Header -->
-    <header class="bg-slate-900 border-b border-slate-800 py-4 px-6 flex justify-between items-center shadow-lg sticky top-0 z-50">
+    <!-- STICKY TOP HEADER -->
+    <header class="sticky top-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-6 py-3 flex flex-wrap items-center justify-between gap-4">
         <div class="flex items-center space-x-3">
-            <div class="bg-amber-500 p-2 rounded-lg text-slate-950">
-                <i class="fa-solid fa-wand-magic-sparkles text-xl"></i>
+            <div class="bg-red-600 text-white p-2 rounded-xl shadow-lg shadow-red-900/30">
+                <i class="fa-solid fa-yin-yang fa-spin text-xl text-yellow-300"></i>
             </div>
             <div>
-                <h1 class="text-xl font-bold tracking-wide">ஜாதக புகைப்பட இணைப்பான் <span class="text-amber-500 text-xs font-normal">v3.5 (Precision Edition)</span></h1>
-                <p class="text-xs text-slate-400">பிரேமிற்குள் இருக்கும் போட்டோவை மட்டும் தனியாக நகர்த்தும் வசதி!</p>
+                <h1 class="text-lg md:text-xl font-bold tracking-wide text-white flex items-center gap-2">
+                    <span>ஜாதக கோஆர்டினேட் இணைப்பான்</span>
+                    <span class="text-xs font-semibold bg-red-950 text-red-400 border border-red-800 px-2 py-0.5 rounded-full">File 3 Creator</span>
+                </h1>
+                <p class="text-xs text-slate-400">Premium Matrimonial Horoscope Multi-Template Builder</p>
             </div>
         </div>
-        <div class="flex items-center space-x-4">
-            <span class="text-xs bg-slate-800 px-3 py-1.5 rounded-full text-amber-400 font-semibold border border-amber-500/20">
-                <i class="fa-solid fa-circle-check mr-1.5"></i> நேரடி எடிட்டிங் & உள்-படம் நகர்த்தல்
+        
+        <div class="flex items-center gap-3">
+            <span class="text-xs bg-slate-800 text-slate-300 px-2.5 py-1 rounded-md border border-slate-700 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                v4.4 (Spacing Optimized)
             </span>
+            <div class="flex gap-2">
+                <button onclick="resetAllSettings()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm px-3 py-1.5 rounded-lg border border-slate-700 transition flex items-center gap-1">
+                    <i class="fa-solid fa-rotate"></i> மீட்க
+                </button>
+                <button onclick="showInstructions()" class="bg-indigo-950/60 hover:bg-indigo-900 text-indigo-300 text-sm px-3 py-1.5 rounded-lg border border-indigo-800 transition flex items-center gap-1">
+                    <i class="fa-solid fa-circle-info"></i> உதவி
+                </button>
+            </div>
         </div>
     </header>
 
-    <!-- Custom Toast Notification System -->
-    <div id="toast-container" class="fixed top-20 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
-
-    <!-- Main Container -->
+    <!-- MAIN DASHBOARD CONTAINER -->
     <div class="flex-1 flex flex-col lg:flex-row overflow-hidden">
         
-        <!-- Sidebar Controls -->
-        <aside class="w-full lg:w-96 bg-slate-900 border-r border-slate-800 flex flex-col overflow-y-auto p-6 space-y-6">
+        <!-- SIDEBAR CONTROLS (Left Panel) -->
+        <aside class="w-full lg:w-[400px] bg-slate-900 border-r border-slate-800 flex flex-col overflow-y-auto shrink-0">
             
-            <!-- Upload Panel -->
-            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
-                <h3 class="text-xs font-bold text-amber-450 uppercase tracking-wider">
-                    <i class="fa-solid fa-upload mr-2 text-amber-500"></i>புகைப்படம் பதிவேற்றம்
-                </h3>
-                <p class="text-[11px] text-slate-400 leading-relaxed">
-                    ஜாதகப் படிவத்தில் இணைக்க வேண்டிய நபரின் புகைப்படத்தை (File 2) கீழே அப்லோடு செய்யவும்.
-                </p>
-                <div>
-                    <div class="relative group mt-2">
-                        <input type="file" id="upload-file2" accept="image/*" onchange="handleFileUpload(event)" class="hidden">
-                        <label for="upload-file2" id="file2-label" class="flex items-center justify-center w-full py-3 px-4 bg-slate-800 hover:bg-slate-750 border border-slate-700 hover:border-amber-500 rounded-lg cursor-pointer transition text-xs font-medium text-slate-300">
-                            <i class="fa-solid fa-user-tie mr-2 text-amber-500"></i> நபர் படம் அப்லோட்
-                        </label>
+            <!-- SECTION 1: PHOTO UPLOAD -->
+            <div class="p-5 border-b border-slate-800 bg-slate-900/50">
+                <h2 class="text-sm font-semibold tracking-wider text-slate-400 uppercase mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-image text-emerald-400"></i> 1. வரன் புகைப்படம் (File 2)
+                </h2>
+                
+                <div class="relative group border-2 border-dashed border-slate-700 hover:border-emerald-500 rounded-xl p-4 transition-all duration-300 bg-slate-950 text-center cursor-pointer">
+                    <input type="file" id="imageLoader" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
+                    <div id="uploadPlaceholder" class="space-y-2">
+                        <div class="w-12 h-12 rounded-full bg-slate-900 flex items-center justify-center mx-auto group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-cloud-arrow-up text-slate-400 group-hover:text-emerald-400 text-lg"></i>
+                        </div>
+                        <div>
+                            <span class="text-sm font-medium text-slate-300 group-hover:text-emerald-300">புகைப்படத்தை தேர்ந்தெடுக்கவும்</span>
+                            <p class="text-xs text-slate-500 mt-1">PNG, JPG அல்லது JPEG வடிவங்கள்</p>
+                        </div>
+                    </div>
+                    <div id="uploadSuccess" class="hidden space-y-1">
+                        <i class="fa-solid fa-circle-check text-emerald-400 text-2xl animate-bounce"></i>
+                        <p class="text-sm font-medium text-emerald-300">புகைப்படம் வெற்றிகரமாக இணைக்கப்பட்டது!</p>
+                        <p id="fileName" class="text-xs text-slate-500 truncate max-w-xs mx-auto"></p>
                     </div>
                 </div>
             </div>
 
-            <!-- Coordinate / Layer Settings -->
-            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-4">
-                <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-                    <h3 class="text-xs font-bold text-amber-450 uppercase tracking-wider">
-                        <i class="fa-solid fa-arrows-up-down-left-right mr-2 text-amber-500"></i>பிரேம் அளவு (Frame)
-                    </h3>
-                    <span class="text-[9px] bg-indigo-500/25 text-indigo-300 border border-indigo-500/30 px-2 py-0.5 rounded font-mono font-bold">பிரேம் கண்ட்ரோல்</span>
+            <!-- SECTION: TEMPLATE SELECTOR -->
+            <div class="p-5 border-b border-slate-800">
+                <h2 class="text-sm font-semibold tracking-wider text-slate-400 uppercase mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-wand-magic-sparkles text-violet-400"></i> 2. மாதிரி வடிவமைப்பு (Templates)
+                </h2>
+                <div class="grid grid-cols-2 gap-2" id="template-options-container">
+                    <!-- Red Theme -->
+                    <button onclick="setHoroscopeTheme('red')" id="btn-theme-red" class="theme-option-btn bg-slate-850 hover:bg-slate-800 text-xs py-2.5 px-3 rounded-lg border border-red-500 text-left flex items-center gap-2 transition duration-200">
+                        <span class="w-3.5 h-3.5 rounded-full bg-red-750 border border-red-400 shrink-0"></span>
+                        <div class="leading-tight">
+                            <span class="block font-bold text-slate-200">மங்கல சிவப்பு</span>
+                            <span class="text-[9px] text-slate-500">Traditional Crimson</span>
+                        </div>
+                    </button>
+                    <!-- Blue Theme -->
+                    <button onclick="setHoroscopeTheme('blue')" id="btn-theme-blue" class="theme-option-btn bg-slate-850 hover:bg-slate-800 text-xs py-2.5 px-3 rounded-lg border border-slate-700 text-left flex items-center gap-2 transition duration-200">
+                        <span class="w-3.5 h-3.5 rounded-full bg-blue-700 border border-blue-400 shrink-0"></span>
+                        <div class="leading-tight">
+                            <span class="block font-bold text-slate-200">அரச நீலம்</span>
+                            <span class="text-[9px] text-slate-500">Royal Sapphire</span>
+                        </div>
+                    </button>
+                    <!-- Green Theme -->
+                    <button onclick="setHoroscopeTheme('green')" id="btn-theme-green" class="theme-option-btn bg-slate-850 hover:bg-slate-800 text-xs py-2.5 px-3 rounded-lg border border-slate-700 text-left flex items-center gap-2 transition duration-200">
+                        <span class="w-3.5 h-3.5 rounded-full bg-emerald-800 border border-emerald-400 shrink-0"></span>
+                        <div class="leading-tight">
+                            <span class="block font-bold text-slate-200">பக்தி பசுமை</span>
+                            <span class="text-[9px] text-slate-500">Auspicious Green</span>
+                        </div>
+                    </button>
+                    <!-- Purple Theme -->
+                    <button onclick="setHoroscopeTheme('purple')" id="btn-theme-purple" class="theme-option-btn bg-slate-850 hover:bg-slate-800 text-xs py-2.5 px-3 rounded-lg border border-slate-700 text-left flex items-center gap-2 transition duration-200">
+                        <span class="w-3.5 h-3.5 rounded-full bg-purple-800 border border-purple-400 shrink-0"></span>
+                        <div class="leading-tight">
+                            <span class="block font-bold text-slate-200">மங்கல ஊதா</span>
+                            <span class="text-[9px] text-slate-500">Divine Purple</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- SECTION 4: INNER IMAGE ADJUSTMENT (Renumbered to 3) -->
+            <div class="p-5 border-b border-slate-800 space-y-4">
+                <h2 class="text-sm font-semibold tracking-wider text-slate-400 uppercase flex items-center gap-2">
+                    <i class="fa-solid fa-maximize text-indigo-400"></i> 3. உள்-புகைப்பட சீரமைப்பு (Aspect Fit)
+                </h2>
+
+                <!-- Zoom -->
+                <div class="space-y-1.5">
+                    <div class="flex justify-between text-xs">
+                        <span class="text-slate-300">அளவை கூட்டு (Zoom)</span>
+                        <span class="font-mono text-indigo-400 font-bold" id="val-zoom">100%</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="text-[10px] text-slate-500 w-6">100%</span>
+                        <input type="range" id="slider-zoom" min="100" max="300" value="100" class="flex-1 h-1.5 bg-slate-850 rounded-lg appearance-none cursor-pointer">
+                        <span class="text-[10px] text-slate-500 w-6 text-right">300%</span>
+                    </div>
                 </div>
 
-                <!-- Sliders for precise coordinates -->
-                <div class="space-y-4 text-xs">
-                    <div>
-                        <div class="flex justify-between mb-1">
-                            <span class="text-slate-400 font-medium">நகர்த்துக X (Horizontal)</span>
-                            <span id="val-x" class="font-mono text-amber-400">20px</span>
-                        </div>
-                        <input type="range" id="slider-x" min="-100" max="600" value="20" class="w-full accent-amber-500 bg-slate-800 h-1.5 rounded-lg appearance-none cursor-pointer" oninput="updatePhotoCoordinate('x', this.value)">
+                <!-- Pan X -->
+                <div class="space-y-1.5">
+                    <div class="flex justify-between text-xs">
+                        <span class="text-slate-300">இடப்பக்க நகர்வு (Pan X)</span>
+                        <span class="font-mono text-indigo-400 font-bold" id="val-pan-x">0px</span>
                     </div>
-
-                    <div>
-                        <div class="flex justify-between mb-1">
-                            <span class="text-slate-400 font-medium">நகர்த்துக Y (Vertical)</span>
-                            <span id="val-y" class="font-mono text-amber-400">15px</span>
-                        </div>
-                        <input type="range" id="slider-y" min="-100" max="900" value="15" class="w-full accent-amber-500 bg-slate-800 h-1.5 rounded-lg appearance-none cursor-pointer" oninput="updatePhotoCoordinate('y', this.value)">
+                    <div class="flex items-center gap-3">
+                        <span class="text-[10px] text-slate-500 w-6">-150px</span>
+                        <input type="range" id="slider-pan-x" min="-150" max="150" value="0" class="flex-1 h-1.5 bg-slate-850 rounded-lg appearance-none cursor-pointer">
+                        <span class="text-[10px] text-slate-500 w-6 text-right">150px</span>
                     </div>
+                </div>
 
-                    <div>
-                        <div class="flex justify-between mb-1">
-                            <span class="text-slate-400 font-medium">அகலம் (Width)</span>
-                            <span id="val-w" class="font-mono text-amber-400">170px</span>
-                        </div>
-                        <input type="range" id="slider-w" min="50" max="800" value="170" class="w-full accent-amber-500 bg-slate-800 h-1.5 rounded-lg appearance-none cursor-pointer" oninput="updatePhotoCoordinate('w', this.value)">
+                <!-- Pan Y -->
+                <div class="space-y-1.5">
+                    <div class="flex justify-between text-xs">
+                        <span class="text-slate-300">மேலெழுந்த நகர்வு (Pan Y)</span>
+                        <span class="font-mono text-indigo-400 font-bold" id="val-pan-y">0px</span>
                     </div>
-
-                    <div>
-                        <div class="flex justify-between mb-1">
-                            <span class="text-slate-400 font-medium">உயரம் (Height)</span>
-                            <span id="val-h" class="font-mono text-amber-400">210px</span>
-                        </div>
-                        <input type="range" id="slider-h" min="50" max="850" value="210" class="w-full accent-amber-500 bg-slate-800 h-1.5 rounded-lg appearance-none cursor-pointer" oninput="updatePhotoCoordinate('h', this.value)">
-                    </div>
-
-                    <div>
-                        <div class="flex justify-between mb-1">
-                            <span class="text-slate-400 font-medium">வட்டவடிவம் (Radius)</span>
-                            <span id="val-radius" class="font-mono text-amber-400">8px</span>
-                        </div>
-                        <input type="range" id="slider-radius" min="0" max="100" value="8" class="w-full accent-amber-500 bg-slate-800 h-1.5 rounded-lg appearance-none cursor-pointer" oninput="updatePhotoCoordinate('radius', this.value)">
+                    <div class="flex items-center gap-3">
+                        <span class="text-[10px] text-slate-500 w-6">-150px</span>
+                        <input type="range" id="slider-pan-y" min="-150" max="150" value="0" class="flex-1 h-1.5 bg-slate-850 rounded-lg appearance-none cursor-pointer">
+                        <span class="text-[10px] text-slate-500 w-6 text-right">150px</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Inner Image Adjustment Settings -->
-            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-4">
-                <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-                    <h3 class="text-xs font-bold text-amber-450 uppercase tracking-wider">
-                        <i class="fa-solid fa-image mr-2 text-amber-500"></i>பிரேமிற்குள் படம் மாற்றி (Inner Image)
-                    </h3>
-                    <span class="text-[9px] bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded font-mono font-bold">உள்-படம்</span>
-                </div>
-
-                <!-- Sliders for inner image crop/zoom/pan adjustments -->
-                <div class="space-y-4 text-xs">
-                    <div>
-                        <div class="flex justify-between mb-1">
-                            <span class="text-slate-400 font-medium">படம் பெரிதாக்கு (Zoom)</span>
-                            <span id="val-zoom" class="font-mono text-amber-400">100%</span>
-                        </div>
-                        <input type="range" id="slider-zoom" min="100" max="300" value="100" class="w-full accent-amber-500 bg-slate-800 h-1.5 rounded-lg appearance-none cursor-pointer" oninput="updatePhotoCoordinate('zoom', this.value)">
-                    </div>
-
-                    <div>
-                        <div class="flex justify-between mb-1">
-                            <span class="text-slate-400 font-medium">படம் நகர்த்துக X (Pan X)</span>
-                            <span id="val-panX" class="font-mono text-amber-400">0px</span>
-                        </div>
-                        <input type="range" id="slider-panX" min="-150" max="150" value="0" class="w-full accent-amber-500 bg-slate-800 h-1.5 rounded-lg appearance-none cursor-pointer" oninput="updatePhotoCoordinate('panX', this.value)">
-                    </div>
-
-                    <div>
-                        <div class="flex justify-between mb-1">
-                            <span class="text-slate-400 font-medium">படம் நகர்த்துக Y (Pan Y)</span>
-                            <span id="val-panY" class="font-mono text-amber-400">0px</span>
-                        </div>
-                        <input type="range" id="slider-panY" min="-150" max="150" value="0" class="w-full accent-amber-500 bg-slate-800 h-1.5 rounded-lg appearance-none cursor-pointer" oninput="updatePhotoCoordinate('panY', this.value)">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Export Buttons -->
-            <div class="pt-4 space-y-2.5">
-                <button onclick="downloadOutput('image')" class="w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold rounded-xl shadow-lg hover:shadow-amber-500/10 active:scale-[0.98] transition duration-200 text-sm">
-                    <i class="fa-solid fa-file-image mr-2 text-lg"></i> File 3 - ஆக மாற்றுக (JPEG)
+            <!-- EXPORT ACTIONS PANEL -->
+            <div class="p-5 mt-auto bg-slate-950 border-t border-slate-800 space-y-3">
+                <button onclick="exportAsImage()" class="w-full bg-gradient-to-r from-rose-600 to-amber-600 hover:from-rose-500 hover:to-amber-500 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-rose-950/50 transition duration-150 transform active:scale-95 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-file-image text-lg"></i>
+                    <span>File 3 - ஆக மாற்றுக (JPEG)</span>
                 </button>
-                <button onclick="downloadOutput('pdf')" class="w-full py-2.5 bg-slate-850 hover:bg-slate-800 text-white font-semibold rounded-xl border border-slate-700 active:scale-[0.98] transition text-sm">
-                    <i class="fa-solid fa-file-pdf mr-2 text-amber-500"></i> PDF ஆக பதிவிறக்குக
+                <button onclick="exportAsPDF()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold py-2.5 px-4 rounded-xl border border-slate-700 transition duration-150 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-file-pdf text-red-500"></i>
+                    <span>PDF ஆக பதிவிறக்குக</span>
                 </button>
+                <p class="text-[10px] text-slate-500 text-center">அச்சிட உகந்த 300 DPI துல்லியத் தரத்தில் பதிவிறக்கம் செய்யப்படும்.</p>
             </div>
+
         </aside>
 
-        <!-- Preview and Canvas Working Area -->
-        <main class="flex-1 bg-slate-950 p-4 md:p-8 flex items-center justify-center overflow-auto">
+        <!-- LIVE INTERACTIVE WORKSPACE (Right Panel) -->
+        <main class="flex-1 bg-slate-950 overflow-auto p-4 md:p-8 flex flex-col items-center relative">
             
-            <!-- Real A4 Sheet representation -->
-            <div id="output-canvas-page" class="page-a4">
-                
-                <!-- BACKGROUND GRID -->
-                <div class="absolute inset-0 pointer-events-none bg-slate-50"></div>
-
-                <!-- MATRIMONIAL TEMPLATE WITH DIRECT EDITABLE DATA -->
-                <div id="template-mode-container" class="absolute inset-0 p-8 flex flex-col justify-between">
-                    
-                    <!-- Decorative border frame -->
-                    <div class="absolute inset-4 border-2 border-amber-600 rounded-lg pointer-events-none opacity-80"></div>
-                    <div class="absolute inset-5 border border-amber-600 rounded-lg pointer-events-none opacity-40"></div>
-
-                    <!-- Header Segment -->
-                    <div class="text-center relative z-10 pt-4">
-                        <div class="text-amber-750 text-sm font-semibold tracking-wider flex justify-center items-center gap-2">
-                            <span class="h-px w-8 bg-amber-600"></span>
-                            <span id="lbl-subdeity" class="direct-editable" contenteditable="true">செல்லம்பட்டி அருள்மிகு சீலக்காரி அம்மன் துணை</span>
-                            <span class="h-px w-8 bg-amber-600"></span>
-                        </div>
-                        <h2 class="text-3xl font-extrabold text-red-700 mt-2 tracking-wide font-serif">ஜாதக வரன் விவரம்</h2>
-                        <div class="flex justify-center mt-1">
-                            <p id="lbl-caste" class="text-xs text-amber-800 font-semibold direct-editable" contenteditable="true">விஷ்ணு குலம், பால கோத்திரம், கவர நாயுடு</p>
-                        </div>
-                    </div>
-
-                    <!-- Helper Tip (Only visible on browser screen, hidden during print/render) -->
-                    <div class="absolute top-2 left-6 text-[10px] text-amber-770 bg-amber-100/80 px-2 py-1 rounded font-medium border border-amber-200/55 pointer-events-none" id="edit-tip-banner">
-                        <i class="fa-solid fa-circle-info mr-1"></i> ஏதேனும் விவரங்களை நேரடியாகக் கிளிக் செய்து டைப் செய்து மாற்றலாம்!
-                    </div>
-
-                    <!-- Photo Placeholder & Personal Info Layout -->
-                    <div class="grid grid-cols-12 gap-6 mt-6 items-start relative z-10 px-4">
-                        
-                        <!-- Left-aligned metadata (Birth Details) -->
-                        <div class="col-span-7 space-y-2.5">
-                            <div class="bg-amber-50/70 p-3.5 rounded-lg border border-amber-100/70 space-y-1.5 text-xs">
-                                <div class="flex items-center space-x-2 text-slate-900">
-                                    <span class="w-24 text-slate-500 font-bold shrink-0">பெயர்:</span>
-                                    <span id="lbl-name" class="font-extrabold text-slate-850 direct-editable flex-1" contenteditable="true">M.சூரிய சாரதி, B.Sc., (IIT)</span>
-                                </div>
-                                <div class="flex items-center space-x-2 text-slate-900">
-                                    <span class="w-24 text-slate-500 font-bold shrink-0">பிறந்த தேதி:</span>
-                                    <span id="lbl-dob" class="font-semibold text-slate-800 direct-editable flex-1" contenteditable="true">01-06-1997 (வைகாசி 18, ஞாயிறு)</span>
-                                </div>
-                                <div class="flex items-center space-x-2 text-slate-900">
-                                    <span class="w-24 text-slate-500 font-bold shrink-0">பிறந்த நேரம்:</span>
-                                    <span id="lbl-tob" class="font-mono font-semibold text-slate-805 direct-editable flex-1" contenteditable="true">09:37 AM</span>
-                                </div>
-                                <div class="flex items-center space-x-2 text-slate-900">
-                                    <span class="w-24 text-slate-500 font-bold shrink-0">ந & ராசி:</span>
-                                    <span id="lbl-starRasi" class="font-semibold text-slate-800 direct-editable flex-1" contenteditable="true">ரேவதி 3-ஆம் பாதம், மீன ராசி</span>
-                                </div>
-                                <div class="flex items-center space-x-2 text-slate-900">
-                                    <span class="w-24 text-slate-500 font-bold shrink-0">லக்னம்:</span>
-                                    <span id="lbl-lagnam" class="font-semibold text-slate-800 direct-editable flex-1" contenteditable="true">கடக லக்னம் (யோகம்: சௌபாக்யம்)</span>
-                                </div>
-                                <div class="flex items-center space-x-2 text-slate-900">
-                                    <span class="w-24 text-slate-500 font-bold shrink-0">பிறந்த ஊர்:</span>
-                                    <span id="lbl-pob" class="font-semibold text-slate-800 direct-editable flex-1" contenteditable="true">உடுமலைப்பேட்டை (அமராவதி நகர்)</span>
-                                </div>
-                                 <div class="flex items-center space-x-2 text-slate-900">
-                                    <span class="w-23 text-slate-500 font-bold shrink-0">வசிக்கும் ஊர்:</span>
-                                    <span id="lbl-pob" class="font-semibold text-slate-800 direct-editable flex-1" contenteditable="true">உடுமலைப்பேட்டை (அமராவதி நகர்)</span>
-                                </div>
-                            </div>
-
-                            <div class="bg-amber-50/40 p-3 rounded-lg border border-amber-100/50 text-xs space-y-1">
-                                <div class="flex items-center"><span class="w-24 font-bold text-slate-500 shrink-0">தந்தை பெயர்:</span> <span id="lbl-father" class="font-medium direct-editable flex-1" contenteditable="true">M.மோகன்ராஜ்</span></div>
-                                <div class="flex items-center"><span class="w-24 font-bold text-slate-500 shrink-0">தாயார் பெயர்:</span> <span id="lbl-mother" class="font-medium direct-editable flex-1" contenteditable="true">M.ரேணுகா</span></div>
-                                <div class="flex items-center"><span class="w-24 font-bold text-slate-500 shrink-0">உடன் பிறந்தோர்:</span> <span id="lbl-siblings" class="font-medium direct-editable flex-1" contenteditable="true">தம்பி 1 (Brother)</span></div>
-                            </div>
-                        </div>
-
-                        <!-- Right Photo Area (Interactive Placement Area) -->
-                        <div class="col-span-5 h-[230px] relative border border-slate-250 bg-slate-50/50 rounded-lg">
-                            <div class="absolute inset-0 flex flex-col justify-center items-center text-center p-4 text-slate-400 pointer-events-none" id="avatar-helper-text">
-                                <i class="fa-regular fa-image text-3xl mb-2 text-slate-350"></i>
-                                <p class="text-[9px]">போட்டோவை அப்லோடு செய்து மவுஸால் நகர்த்தவும்</p>
-                            </div>
-                            <!-- Interactive Photo Layer with Overflow Hidden -->
-                            <div id="interactive-photo" class="absolute cursor-move overflow-hidden border-2 border-amber-700/80 shadow-md active-layer" style="top: 15px; left: 20px; width: 170px; height: 210px; border-radius: 8px;">
-                                <!-- Inner Image which can be scaled and panned inside its container frame -->
-                                <img id="user-photo-img" src="" alt="Photo" class="w-full h-full object-cover hidden transition-none">
-                                <div class="w-full h-full flex items-center justify-center bg-slate-100 text-slate-400" id="no-photo-p">
-                                    <span class="text-[10px] font-bold">போட்டோ பகுதி</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Astrological Rasi and Navamsam Grid Section -->
-                    <div class="grid grid-cols-2 gap-8 px-4 mt-2 z-10 relative">
-                        
-                        <!-- Rasi Chart -->
-                        <div class="space-y-2">
-                            <h4 class="text-center text-xs font-extrabold text-red-800 bg-amber-100/80 py-1 rounded">இராசி கட்டம்</h4>
-                            <div id="grid-rasi" class="grid grid-cols-4 grid-rows-4 border-2 border-red-850 w-full aspect-square text-[11px] font-bold bg-white">
-                                <!-- Row 1 -->
-                                <div class="border border-red-800/80 p-1 flex flex-col justify-between">
-                                    <span class="text-[9px] text-slate-400 font-normal"></span>
-                                    <div id="cell-rasi-meenam" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true">சந், சனி, கேது</div>
-                                </div>
-                                <div class="border border-red-800/80 p-1 flex flex-col justify-between">
-                                    <span class="text-[9px] text-slate-400 font-normal"></span>
-                                    <div id="cell-rasi-mesham" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true">புதன்</div>
-                                </div>
-                                <div class="border border-red-800/80 p-1 flex flex-col justify-between">
-                                    <span class="text-[9px] text-slate-400 font-normal"></span>
-                                    <div id="cell-rasi-rishabam" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true">சூரியன்</div>
-                                </div>
-                                <div class="border border-red-800/80 p-1 flex flex-col justify-between">
-                                    <span class="text-[9px] text-slate-400 font-normal"></span>
-                                    <div id="cell-rasi-mithunam" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true">சுக்கிரன்</div>
-                                </div>
-                                <!-- Row 2 -->
-                                <div class="border border-red-800/80 p-1 flex flex-col justify-between">
-                                    <span class="text-[9px] text-slate-400 font-normal"></span>
-                                    <div id="cell-rasi-kumbam" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true"></div>
-                                </div>
-                                <div class="col-span-2 row-span-2 flex items-center justify-center border border-red-800 bg-amber-50/20">
-                                    <span class="text-base font-black text-red-800 tracking-wider font-serif">இராசி</span>
-                                </div>
-                                <div class="border border-red-800/80 p-1 flex flex-col justify-between">
-                                    <span class="text-[9px] text-slate-400 font-normal"></span>
-                                    <div id="cell-rasi-kadagam" class="text-center font-extrabold text-blue-600 leading-tight direct-editable" contenteditable="true">லக்னம்</div>
-                                </div>
-                                <!-- Row 3 -->
-                                <div class="border border-red-800/80 p-1 flex flex-col justify-between">
-                                    <span class="text-[9px] text-slate-400 font-normal"></span>
-                                    <div id="cell-rasi-magaram" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true">குரு</div>
-                                </div>
-                                <div class="border border-red-800/80 p-1 flex flex-col justify-between">
-                                    <span class="text-[9px] text-slate-400 font-normal"></span>
-                                    <div id="cell-rasi-simmam" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true">செவ்வாய்</div>
-                                </div>
-                                <!-- Row 4 -->
-                                <div class="border border-red-800/80 p-1 flex flex-col justify-between">
-                                    <span class="text-[9px] text-slate-400 font-normal"></span>
-                                    <div id="cell-rasi-dhanusu" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true"></div>
-                                </div>
-                                <div class="border border-red-800/80 p-1 flex flex-col justify-between">
-                                    <span class="text-[9px] text-slate-400 font-normal"></span>
-                                    <div id="cell-rasi-viruchigam" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true"></div>
-                                </div>
-                                <div class="border border-red-800/80 p-1 flex flex-col justify-between">
-                                    <span class="text-[9px] text-slate-400 font-normal"></span>
-                                    <div id="cell-rasi-thulaam" class="text-center text-slate-500 font-bold leading-tight direct-editable" contenteditable="true">மாந்தி</div>
-                                </div>
-                                <div class="border border-red-800/80 p-1 flex flex-col justify-between">
-                                    <span class="text-[9px] text-slate-400 font-normal"></span>
-                                    <div id="cell-rasi-kanni" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true">ராகு</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Navamsam Chart -->
-                        <div class="space-y-2">
-                            <h4 class="text-center text-xs font-extrabold text-red-800 bg-amber-100/80 py-1 rounded">நவாம்சம் கட்டம்</h4>
-                            <div id="grid-navamsam" class="grid grid-cols-4 grid-rows-4 border-2 border-red-850 w-full aspect-square text-[11px] font-bold bg-white">
-                                <!-- Row 1 -->
-                                <div class="border border-red-800/80 p-1 flex flex-col justify-between">
-                                    <span class="text-[9px] text-slate-400 font-normal"></span>
-                                    <div id="cell-navamsam-meenam" class="text-center text-slate-500 font-bold leading-tight direct-editable" contenteditable="true">மாந்தி</div>
-                                </div>
-                                <div class="border border-red-800/80 p-1 flex flex-col justify-between">
-                                    <span class="text-[9px] text-slate-400 font-normal"></span>
-                                    <div id="cell-navamsam-mesham" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true"></div>
-                                </div>
-                                <div class="border border-red-800/80 p-1 flex flex-col justify-between">
-                                    <span class="text-[9px] text-slate-400 font-normal"></span>
-                                    <div id="cell-navamsam-rishabam" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true"></div>
-                                </div>
-                                <div class="border border-red-800/80 p-1 flex flex-col justify-between">
-                                    <span class="text-[9px] text-slate-400 font-normal"></span>
-                                    <div id="cell-navamsam-mithunam" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true">சூரியன்</div>
-                                </div>
-                                <!-- Row 2 -->
-                                <div class="border border-red-800/80 p-1 flex flex-col justify-between">
-                                    <span class="text-[9px] text-slate-400 font-normal"></span>
-                                    <div id="cell-navamsam-kumbam" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true">சந், சனி</div>
-                                </div>
-                                <div class="col-span-2 row-span-2 flex items-center justify-center border border-red-800 bg-amber-50/20">
-                                    <span class="text-base font-black text-red-800 tracking-wider font-serif">நவாம்சம்</span>
-                                </div>
-                                <div class="border border-red-800/80 p-1 flex flex-col justify-between">
-                                    <span class="text-[9px] text-slate-400 font-normal"></span>
-                                    <div id="cell-navamsam-kadagam" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true">கேது</div>
-                                </div>
-                                <!-- Row 3 -->
-                                <div class="border border-red-800/80 p-1 flex flex-col justify-between">
-                                    <span class="text-[9px] text-slate-400 font-normal"></span>
-                                    <div id="cell-navamsam-magaram" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true">ராகு</div>
-                                </div>
-                                <div class="border border-red-800/80 p-1 flex flex-col justify-between">
-                                    <span class="text-[9px] text-slate-400 font-normal"></span>
-                                    <div id="cell-navamsam-simmam" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true"></div>
-                                </div>
-                                <!-- Row 4 -->
-                                <div class="border border-red-800/80 p-1 flex flex-col justify-between">
-                                    <span class="text-[9px] text-slate-400 font-normal"></span>
-                                    <div id="cell-navamsam-dhanusu" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true">செவ்வாய்</div>
-                                </div>
-                                <div class="border border-red-800/80 p-1 flex flex-col justify-between">
-                                    <span class="text-[9px] text-slate-400 font-normal"></span>
-                                    <div id="cell-navamsam-viruchigam" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true">புதன்</div>
-                                </div>
-                                <div class="border border-red-800/80 p-1 flex flex-col justify-between">
-                                    <span class="text-[9px] text-slate-400 font-normal"></span>
-                                    <div id="cell-navamsam-thulaam" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true">சுக்கிரன்</div>
-                                </div>
-                                <div class="border border-red-800/80 p-1 flex flex-col justify-between">
-                                    <span class="text-[9px] text-slate-400 font-normal"></span>
-                                    <div id="cell-navamsam-kanni" class="text-center text-slate-800 font-bold leading-tight direct-editable" contenteditable="true">குரு, ல</div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <!-- Additional Details Footer Section -->
-                    <div class="grid grid-cols-2 gap-6 bg-amber-50/70 p-4 rounded-xl border border-amber-100 z-10 relative text-[11px] leading-relaxed">
-                        <div class="space-y-1.5">
-                            <h5 class="font-bold text-red-800 border-b border-amber-200 pb-0.5"><i class="fa-solid fa-house-chimney mr-1"></i> சொத்து மற்றும் தொழில் விபரம்</h5>
-                            <p class="text-slate-750 flex items-center"><span class="font-bold shrink-0">சொத்துக்கள்:&nbsp;</span> <span id="lbl-assets" class="direct-editable flex-1 text-slate-800" contenteditable="true">சொந்த வீடு, சொந்த பைபர் கேபிள் சர்வீஸ்</span></p>
-                            <p class="text-slate-750 flex items-center"><span class="font-bold shrink-0">வேலை:&nbsp;</span> <span id="lbl-job" class="direct-editable flex-1 text-slate-800" contenteditable="true">TNEB (அரசுப் பணி)</span></p>
-                            <p class="text-slate-750 flex items-center"><span class="font-bold shrink-0">மாத வருமானம்:&nbsp;</span> <span id="lbl-income" class="direct-editable flex-1 text-slate-800" contenteditable="true">ரூ. 50,000/-</span></p>
-                        </div>
-                        <div class="space-y-1.5">
-                            <h5 class="font-bold text-red-800 border-b border-amber-200 pb-0.5"><i class="fa-solid fa-calendar-check mr-1"></i> திசை இருப்பு விபரம்</h5>
-                            <div class="text-slate-750 mb-1">
-                                <span id="lbl-dasha" class="direct-editable block text-slate-800" contenteditable="true">பிறப்பில் புதன் திசை இருப்பு: 7 வரு 2 மா 21 நா. 22-08-2027 அன்றுடன் சுக்கிர திசையில் சனி புக்தி முடிவுறும்</span>
-                            </div>
-                            <div class="text-slate-750 font-bold text-slate-800 flex items-center gap-1.5 mt-1 bg-amber-100/40 p-1 rounded">
-                                <i class="fa-solid fa-phone text-red-700 shrink-0"></i> தொடர்பு எண்: <span id="lbl-phone" class="direct-editable text-slate-900" contenteditable="true">9442008538</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Printer Branding Footer -->
-                    <div class="text-right text-[10px] text-slate-500 font-bold italic z-10 relative px-4 mt-1 flex justify-end">
-                        <span id="lbl-printer" class="direct-editable text-red-850" contenteditable="true">ரவி அச்சகம், உடுமலை.</span>
-                    </div>
-
+            <!-- CANVAS VIEWPORT CONTROL HEADER -->
+            <div class="w-full max-w-[794px] flex items-center justify-between mb-4 bg-slate-900 border border-slate-800 px-4 py-2 rounded-xl text-xs">
+                <div class="flex items-center gap-2 text-slate-400">
+                    <span class="inline-block w-2.5 h-2.5 rounded-full bg-indigo-500 animate-pulse"></span>
+                    <span>உள்ளார்ந்த மாதிரிக் காட்சி (A4 Sheet Preview with Borders)</span>
                 </div>
-
+                <div class="flex items-center gap-3">
+                    <span class="text-slate-500 font-mono">அளவு: 210mm x 297mm</span>
+                    <div class="flex items-center bg-slate-950 border border-slate-800 rounded-md p-1 gap-1">
+                        <button onclick="changeCanvasZoom(0.5)" class="hover:bg-slate-800 px-2 py-0.5 rounded text-slate-400">50%</button>
+                        <button onclick="changeCanvasZoom(0.75)" class="hover:bg-slate-800 px-2 py-0.5 rounded text-slate-400">75%</button>
+                        <button onclick="changeCanvasZoom(1)" class="hover:bg-slate-800 px-2 py-0.5 text-slate-100 font-bold bg-slate-800 rounded">100%</button>
+                        <button onclick="autoFit()" class="hover:bg-slate-800 px-2 py-0.5 rounded text-slate-400" title="சாளரத்திற்கு ஏற்ப பொருத்துக"><i class="fa-solid fa-expand text-[10px]"></i></button>
+                    </div>
+                </div>
             </div>
+
+            <!-- SCALING CONTAINER WRAPPER FOR A4 -->
+            <div class="flex-1 w-full flex items-start justify-center overflow-visible pb-12">
+                <div id="a4-wrapper" class="relative bg-white text-slate-900 shadow-2xl origin-top" style="width: 794px; height: 1123px; min-width: 794px; min-height: 1123px;">
+                    
+                    <!-- THE DIGITAL A4 SHEET WITH PREMIUM DOUBLE BORDER (Optimized Padding pt-6 pb-16 to raise footer) -->
+                    <div id="a4-sheet" class="theme-red premium-sheet-border w-full h-full relative pt-6 pb-16 px-10 flex flex-col justify-between select-text transition-all duration-350" style="background-color: #ffffff; background-image: radial-gradient(#ececec 1px, transparent 1px); background-size: 16px 16px;">
+                        
+                        <!-- Decorative Corners inside A4 Sheet (Traditional look) -->
+                        <div class="absolute top-2 left-2 w-6 h-6 border-t-2 border-l-2 theme-border-primary opacity-60 pointer-events-none"></div>
+                        <div class="absolute top-2 right-2 w-6 h-6 border-t-2 border-r-2 theme-border-primary opacity-60 pointer-events-none"></div>
+                        <div class="absolute bottom-2 left-2 w-6 h-6 border-b-2 border-l-2 theme-border-primary opacity-60 pointer-events-none"></div>
+                        <div class="absolute bottom-2 right-2 w-6 h-6 border-b-2 border-r-2 theme-border-primary opacity-60 pointer-events-none"></div>
+
+                        <!-- 1. HEADER BRANDING & TRADITIONAL HEADING -->
+                        <div class="text-center space-y-1.5 pb-3 border-b-2 theme-border-primary relative z-10">
+                            <!-- Traditional Deity Line -->
+                            <div class="text-sm font-semibold tracking-wider theme-text-primary" contenteditable="true">
+                                🕉️ உ | ஸ்ரீ விநாயகர் துணை | ஸ்ரீ குலதேவதா துணை 🕉️
+                            </div>
+                            
+                            <!-- Main Bio-data Heading -->
+                            <div class="relative inline-block">
+                                <h1 class="text-3xl font-extrabold tracking-wide theme-text-primary border-double border-b-4 theme-border-primary px-6 py-1 direct-editable font-tamil uppercase" id="editable-title" contenteditable="true">
+                                    ஜாதக வரன் விவரம்
+                                </h1>
+                            </div>
+                            
+                            <p class="text-xs text-slate-500 italic" contenteditable="true">திருமணமே தெய்வீக பந்தம்</p>
+                        </div>
+
+                        <!-- 2. DRAGGABLE HOROSCOPE PHOTO FRAME WITH DEFAULT PREMIUM COORDINATES (Move X: 516px, Move Y: 154px, Width: 204px, Height: 273px) -->
+                        <div id="photo-frame" class="absolute cursor-move active-layer overflow-hidden select-none" style="width: 204px; height: 273px; left: 516px; top: 154px; border-radius: 8px; border: 3px solid var(--theme-primary); background-color: #f8fafc; box-shadow: 0 4px 10px rgba(0,0,0,0.15); display: flex; align-items: center; justify-content: center; z-index: 40;">
+                            <!-- Inner Repositionable Image -->
+                            <div id="inner-image-container" class="w-full h-full relative" style="overflow: hidden;">
+                                <img id="frame-image" src="" alt="வரன் புகைப்படம்" class="absolute block object-cover pointer-events-none hidden" style="width: 100%; height: 100%; transform-origin: center center;" />
+                                <!-- Default Placeholder Frame State -->
+                                <div id="frame-placeholder" class="w-full h-full flex flex-col items-center justify-center p-3 text-center bg-slate-50 text-slate-450">
+                                    <i class="fa-solid fa-user-tie text-4xl mb-2 theme-text-secondary opacity-60"></i>
+                                    <span class="text-xs font-bold theme-text-primary">புகைப்படம் இல்லை</span>
+                                    <p class="text-[9px] text-slate-500 mt-1 leading-normal">இடதுபுறப் பலகத்தில் பதிவேற்றவும்</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3. BIO-DATA DETAILS (TWO-COLUMN SPECIFIC GRID - Tightened gap-y and margin-y) -->
+                        <div class="grid grid-cols-12 gap-y-3 gap-x-6 my-2 text-sm flex-1 pt-3 relative z-10">
+                            
+                            <!-- Personal Particulars (Left Column occupying space beside image) -->
+                            <div class="col-span-8 space-y-3 pr-4">
+                                <div class="flex items-baseline">
+                                    <span class="font-bold theme-text-primary w-28 shrink-0">பெயர்:</span>
+                                    <span id="varan-name" class="direct-editable text-base font-extrabold text-slate-900 border-b border-dashed border-slate-300 flex-1" contenteditable="true">கார்த்திக் கணேஷ், B.E.,</span>
+                                </div>
+                                <div class="flex items-baseline">
+                                    <span class="font-bold theme-text-primary w-28 shrink-0">பிறந்த தேதி:</span>
+                                    <span class="direct-editable text-slate-800 border-b border-dashed border-slate-300 flex-1" contenteditable="true">15-08-1998 (வயது 27)</span>
+                                </div>
+                                <div class="flex items-baseline">
+                                    <span class="font-bold theme-text-primary w-28 shrink-0">பிறந்த நேரம்:</span>
+                                    <span class="direct-editable text-slate-800 border-b border-dashed border-slate-300 flex-1" contenteditable="true">காலை 08:45 மணி அளவில்</span>
+                                </div>
+                                <div class="flex items-baseline">
+                                    <span class="font-bold theme-text-primary w-28 shrink-0">பிறந்த இடம்:</span>
+                                    <span class="direct-editable text-slate-800 border-b border-dashed border-slate-300 flex-1" contenteditable="true">மதுரை, தமிழ்நாடு</span>
+                                </div>
+                                <div class="flex items-baseline">
+                                    <span class="font-bold theme-text-primary w-28 shrink-0">மதம் / சாதி:</span>
+                                    <span class="direct-editable text-slate-800 border-b border-dashed border-slate-300 flex-1" contenteditable="true">இந்து, வெள்ளாளர்</span>
+                                </div>
+                                <div class="flex items-baseline">
+                                    <span class="font-bold theme-text-primary w-28 shrink-0">உட்பிரிவு / கோத்ரம்:</span>
+                                    <span class="direct-editable text-slate-800 border-b border-dashed border-slate-300 flex-1" contenteditable="true">சிவ கோத்திரம்</span>
+                                </div>
+                                <div class="flex items-baseline">
+                                    <span class="font-bold theme-text-primary w-28 shrink-0">நட்சத்திரம்:</span>
+                                    <span class="direct-editable text-slate-800 border-b border-dashed border-slate-300 flex-1" contenteditable="true">பரணி, 2-ம் பாதம்</span>
+                                </div>
+                                <div class="flex items-baseline">
+                                    <span class="font-bold theme-text-primary w-28 shrink-0">ராசி / லக்னம்:</span>
+                                    <span class="direct-editable text-slate-800 border-b border-dashed border-slate-300 flex-1" contenteditable="true">மேஷ ராசி, கன்னி லக்னம்</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Empty spacer space for photo placeholder when top-right (Height set to 273px to prevent overlapping) -->
+                            <div class="col-span-4 h-[273px] pointer-events-none"></div>
+
+                            <!-- Row continuation (Full Width Details below photo area - Tightened padding) -->
+                            <div class="col-span-12 grid grid-cols-2 gap-x-8 gap-y-2.5 pt-1">
+                                <div class="flex items-baseline">
+                                    <span class="font-bold theme-text-primary w-28 shrink-0">உத்தியோகம்:</span>
+                                    <span class="direct-editable text-slate-800 border-b border-dashed border-slate-300 flex-1" contenteditable="true">மூத்த மென்பொருள் பொறியாளர் (MNC, சென்னை)</span>
+                                </div>
+                                <div class="flex items-baseline">
+                                    <span class="font-bold theme-text-primary w-28 shrink-0">தந்தை பெயர்:</span>
+                                    <span class="direct-editable text-slate-800 border-b border-dashed border-slate-300 flex-1" contenteditable="true">மு. இராமகிருஷ்ணன் (ஓய்வுபெற்ற அரசு அதிகாரி)</span>
+                                </div>
+                                <div class="flex items-baseline">
+                                    <span class="font-bold theme-text-primary w-28 shrink-0">மாத வருமானம்:</span>
+                                    <span class="direct-editable text-slate-800 border-b border-dashed border-slate-300 flex-1" contenteditable="true">ரூ. 1,20,000/-</span>
+                                </div>
+                                <div class="flex items-baseline">
+                                    <span class="font-bold theme-text-primary w-28 shrink-0">தாய் பெயர்:</span>
+                                    <span class="direct-editable text-slate-800 border-b border-dashed border-slate-300 flex-1" contenteditable="true">இரா. விஜயலட்சுமி (இல்லத்தரசி)</span>
+                                </div>
+                                <div class="flex items-baseline col-span-2">
+                                    <span class="font-bold theme-text-primary w-28 shrink-0">சொத்து விவரம்:</span>
+                                    <span class="direct-editable text-slate-800 border-b border-dashed border-slate-300 flex-1" contenteditable="true">சொந்த வீடு மற்றும் விளைநிலம் (மதுரை அருகில்)</span>
+                                </div>
+                                <div class="flex items-baseline col-span-2">
+                                    <span class="font-bold theme-text-primary w-28 shrink-0">உடன்பிறந்தோர்:</span>
+                                    <span class="direct-editable text-slate-800 border-b border-dashed border-slate-300 flex-1" contenteditable="true">ஒரு தம்பி (படிக்கிறார்), அக்கா இல்லை</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 4. ASTROLOGICAL GRIDS (DYNAMICALLY LOADED WITH EMBEDDED HIGH-CONTRAST BORDERS) -->
+                        <div class="grid grid-cols-2 gap-8 my-2 relative z-10">
+                            
+                            <!-- Rasi Grid Container -->
+                            <div class="space-y-1.5 text-center">
+                                <div class="flex items-center justify-center gap-1.5 bg-red-100/80 py-1.5 rounded border-2 theme-border-secondary text-xs font-bold theme-text-primary shadow-sm">
+                                    <span contenteditable="true">ராசி கட்டம் (Rasi Grid)</span>
+                                    <i class="fa-solid fa-wand-magic-sparkles text-[10px]"></i>
+                                </div>
+                                <div class="astrology-grid" id="rasi-grid">
+                                    <!-- Populated Dynamically with JS -->
+                                </div>
+                            </div>
+
+                            <!-- Navamsam Grid Container -->
+                            <div class="space-y-1.5 text-center">
+                                <div class="flex items-center justify-center gap-1.5 bg-red-100/80 py-1.5 rounded border-2 theme-border-secondary text-xs font-bold theme-text-primary shadow-sm">
+                                    <span contenteditable="true">அம்ச கட்டம் (Navamsam Grid)</span>
+                                    <i class="fa-solid fa-wand-magic-sparkles text-[10px]"></i>
+                                </div>
+                                <div class="astrology-grid" id="navamsam-grid">
+                                    <!-- Populated Dynamically with JS -->
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- 5. DASHA BALANCE & FOOTER NOTES (LIFTED AND ADJUSTED SAFELY ABOVE THE DOUBLE BORDER) -->
+                        <div class="border-t-2 theme-border-primary pt-2.5 mt-1 grid grid-cols-12 gap-1.5 text-xs relative z-10">
+                            <div class="col-span-12 flex items-center gap-2">
+                                <span class="font-bold theme-text-primary shrink-0">பிறப்பு தசா இருப்பு:</span>
+                                <span class="direct-editable text-slate-850 font-semibold border-b border-dashed border-slate-300 flex-1" contenteditable="true">சுக்கிர திசை 05 வருடம் 08 மாதம் 12 நாட்கள்</span>
+                            </div>
+                            <div class="col-span-12 flex items-center gap-2 mt-0.5">
+                                <span class="font-bold theme-text-primary shrink-0">தொடர்பு எண்:</span>
+                                <span class="direct-editable text-slate-850 font-bold border-b border-dashed border-slate-300 flex-1" contenteditable="true">9876543210, 9876501234 (வாட்ஸ்அப் எண்)</span>
+                            </div>
+                            <div class="col-span-12 text-center text-[10px] text-slate-500 italic mt-1.5" contenteditable="true">
+                                குறிப்பு: ஜாதகப் பொருத்தம் மற்றும் மேலதிக விவரங்களுக்கு மேற்கண்ட எண்களைத் தொடர்பு கொள்ளவும்.
+                            </div>
+                        </div>
+
+                        <!-- அச்சுப்பொறி பிராண்டிங் (Printer Branding) -->
+                        <div class="absolute bottom-4 right-12 text-[10px] text-slate-400 font-bold tracking-wider hover:text-amber-600 transition-colors duration-150" contenteditable="true">
+                            ரவி அச்சகம்,உடுமலை.
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
         </main>
     </div>
 
-    <!-- Script Area for Draggable Coordinate Logic -->
+    <!-- DROP-DOWN SELECTION MODAL (NEW PLANETS MANAGER) -->
+    <div id="planet-modal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-[100] hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl transition-all">
+            <!-- Modal Header -->
+            <div class="flex justify-between items-center pb-2 border-b border-slate-800">
+                <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-dharmachakra fa-spin text-amber-500 text-lg"></i>
+                    <span id="modal-grid-title" class="font-tamil">கிரகங்கள் தேர்வு</span>
+                </h3>
+                <button onclick="closePlanetSelector()" class="text-slate-400 hover:text-white transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            
+            <!-- Warning / Selected Indicators -->
+            <div class="bg-slate-950 border border-slate-800/80 px-3 py-2 rounded-xl flex items-center justify-between text-xs">
+                <span class="text-slate-400 font-medium">அதிகபட்சம் 3 கிரகங்கள்:</span>
+                <span id="modal-selected-count" class="font-bold text-amber-400 font-mono text-sm bg-amber-950/40 px-2 py-0.5 rounded border border-amber-900">0 / 3</span>
+            </div>
+
+            <!-- List Grid View of Navagrahas + Mandhi -->
+            <div class="grid grid-cols-3 gap-2 py-2" id="modal-planets-list">
+                <!-- Javascript will load custom button pills dynamically -->
+            </div>
+
+            <p class="text-[10px] text-slate-500 text-center"><i class="fa-solid fa-circle-info"></i> ஏதேனும் 3 கிரகங்கள் வரை தொட்டு எளிதாக தேர்வு செய்யலாம்.</p>
+
+            <!-- Footer Actions -->
+            <div class="flex gap-2 pt-2 border-t border-slate-800">
+                <button onclick="clearSelectedPlanets()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs py-2.5 rounded-xl font-bold transition">
+                    அனைத்தையும் நீக்கு
+                </button>
+                <button onclick="applySelectedPlanets()" class="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs py-2.5 rounded-xl font-bold transition flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-check"></i>
+                    <span>சேமி (Apply)</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SYSTEM ALERTS TOAST ENGINE CONTAINER -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
+
+    <!-- INSTRUCTIONS MODAL -->
+    <div id="instructions-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
+            <div class="flex justify-between items-center pb-2 border-b border-slate-800">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-circle-question text-indigo-400"></i> ஜாதக எடிட்டர் வழிகாட்டி
+                </h3>
+                <button onclick="hideInstructions()" class="text-slate-400 hover:text-white transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-3 text-sm text-slate-300 font-tamil">
+                <div class="flex gap-3">
+                    <div class="text-emerald-500 font-bold">1.</div>
+                    <p><strong class="text-white">பாரம்பரிய இரட்டை பார்டர் (Premium Double Border):</strong> அச்சிடும்போது மிக அழகாக இருக்கும் வகையில், A4 குறிப்பேட்டைச் சுற்றித் தடிமனான இரட்டை பார்டர்கள் இணைக்கப்பட்டுள்ளன. இது நீங்கள் தேர்ந்தெடுக்கும் வண்ணத் தீமிற்கு ஏற்ப மாறும்.</p>
+                </div>
+                <div class="flex gap-3">
+                    <div class="text-emerald-500 font-bold">2.</div>
+                    <p><strong class="text-white">புதிய கிரகங்கள் தேர்வு (Dropdown Selector):</strong> ராசி மற்றும் அம்ச கட்டங்களை நேரடியாக கிளிக் செய்து தோன்றும் பாப்-அப் பேனலில் 'மாந்தி' உள்ளிட்ட கிரகங்களை எளிதாக தேர்வு செய்யலாம்.</p>
+                </div>
+                <div class="flex gap-3">
+                    <div class="text-emerald-500 font-bold">3.</div>
+                    <p><strong class="text-white">நகர்த்தும் முறை (Draggable Frame):</strong> புகைப்பட சட்டகத்தை (Photo Frame) மவுஸ் அல்லது தொடுதல் மூலம் நேரடியாக இழுத்துக் தங்களுக்குத் தேவையான இடத்தில் வைக்கலாம்.</p>
+                </div>
+                <div class="flex gap-3">
+                    <div class="text-emerald-500 font-bold">4.</div>
+                    <p><strong class="text-white">உயர்தரப் பிரிண்ட்:</strong> 'JPEG' மற்றும் 'PDF' வடிவங்களில் 300 DPI பிரிண்ட் தரத்தில் பாதுகாப்பாகப் பதிவிறக்கலாம்.</p>
+                </div>
+            </div>
+
+            <div class="pt-2">
+                <button onclick="hideInstructions()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 py-2.5 rounded-xl font-bold transition">
+                    புரிந்துகொண்டேன்
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN JAVASCRIPT SYSTEM LOGIC -->
     <script>
-        // Coordinates States
-        const coordinates = {
-            photo: { 
-                x: 20, 
-                y: 15, 
-                w: 170, 
-                h: 210, 
-                radius: 8,
-                zoom: 100, // Zoom percentage of the inner image
-                panX: 0,   // Pan offset in px inside the container
-                panY: 0    // Pan offset in px inside the container
-            }
-        };
-
-        // DOM element references
-        const templatePhoto = document.getElementById('interactive-photo');
-        const userPhotoImg = document.getElementById('user-photo-img');
-
-        const sliderX = document.getElementById('slider-x');
-        const sliderY = document.getElementById('slider-y');
-        const sliderW = document.getElementById('slider-w');
-        const sliderH = document.getElementById('slider-h');
-        const sliderRadius = document.getElementById('slider-radius');
-        
-        // Inner Image Adjustment DOM elements
-        const sliderZoom = document.getElementById('slider-zoom');
-        const sliderPanX = document.getElementById('slider-panX');
-        const sliderPanY = document.getElementById('slider-panY');
-
-        const valX = document.getElementById('val-x');
-        const valY = document.getElementById('val-y');
-        const valW = document.getElementById('val-w');
-        const valH = document.getElementById('val-h');
-        const valRadius = document.getElementById('val-radius');
-        
-        const valZoom = document.getElementById('val-zoom');
-        const valPanX = document.getElementById('val-panX');
-        const valPanY = document.getElementById('val-panY');
-
-        // Drag states for Frame
         let isDragging = false;
         let startX, startY;
-        let dragTarget = null;
+        let originalLeft, originalTop;
+        let currentScale = 1;
+        let activeTheme = 'red';
 
-        // Initialize Application
-        window.addEventListener('load', () => {
-            initInteractiveLayers();
-            updateControlUI();
-            showToast("பிரேமிற்குள் இருக்கும் போட்டோவை நகர்த்த 'Pan X & Y' ஸ்லைடர்களைப் பயன்படுத்துங்கள்.", "success");
-        });
+        // Custom premium default coordinate state mapped from image_718564.png
+        let frameX = 516;
+        let frameY = 154;
+        let frameW = 204;
+        let frameH = 273;
+        let frameR = 8;
 
-        // Toast Notification Function
-        function showToast(message, type = 'info') {
+        // Dynamic Astrology States (Rasi & Navamsam Grid Array Model)
+        // Order mapped clockwise from Pisces to Aquarius (0 = Pisces, 1 = Aries... 11 = Aquarius)
+        let rasiData = [
+            ["சனி"],                 // 0: Pisces (மீனம்)
+            ["ராகு", "செவ்"],        // 1: Aries (மேஷம்)
+            ["புதன்"],               // 2: Taurus (ரிஷபம்)
+            ["சூரி", "குரு"],        // 3: Gemini (மிதுனம்)
+            ["சுக்கிரன்"],            // 4: Cancer (கடகம்)
+            ["கேது"],                // 5: Leo (சிம்மம்)
+            [],                      // 6: Virgo (கன்னி)
+            [],                      // 7: Libra (துலாம்)
+            [],                      // 8: Scorpio (விருச்சிகம்)
+            ["சந்திரன்"],            // 9: Sagittarius (தனுசு)
+            ["லக்னம்"],              // 10: Capricorn (மகரம்)
+            []                       // 11: Aquarius (கும்பம்)
+        ];
+
+        let navamsamData = [
+            ["புதன்"],               // 0: Pisces
+            ["லக்னம்"],              // 1: Aries
+            ["சனி"],                 // 2: Taurus
+            ["ராகு"],                // 3: Gemini
+            ["சூரியன்"],             // 4: Cancer
+            ["கேது", "குரு"],        // 5: Leo
+            [],                      // 6: Virgo
+            ["சந்திரன்"],            // 7: Libra
+            ["செவ்"],                // 8: Scorpio
+            [],                      // 9: Sagittarius
+            [],                      // 10: Capricorn
+            ["சுக்கிரன்"]             // 11: Aquarius
+        ];
+
+        // Backup for reset settings
+        const defaultRasiData = JSON.parse(JSON.stringify(rasiData));
+        const defaultNavamsamData = JSON.parse(JSON.stringify(navamsamData));
+
+        // Available Planets/Points selection list mapped
+        const planetList = [
+            { short: "லக்னம்", display: "லக்னம்" },
+            { short: "சூரியன்", display: "சூரியன்" },
+            { short: "சூரி", display: "சூரி" },
+            { short: "சந்திரன்", display: "சந்திரன்" },
+            { short: "செவ்", display: "செவ்" },
+            { short: "புதன்", display: "புதன்" },
+            { short: "குரு", display: "குரு" },
+            { short: "சுக்கிரன்", display: "சுக்கிரன்" },
+            { short: "சனி", display: "சனி" },
+            { short: "ராகு", display: "ராகு" },
+            { short: "கேது", display: "கேது" },
+            { short: "மாந்தி", display: "மாந்தி" }
+        ];
+
+        // Active Target pointer state for modal selection
+        let currentTargetGrid = null; // 'rasi-grid' or 'navamsam-grid'
+        let currentTargetCellIndex = null; // 0 to 11
+        let tempSelectedPlanets = []; // Array of string keys selected in selector modal
+
+        // Dom Elements
+        const photoFrame = document.getElementById('photo-frame');
+        const frameImage = document.getElementById('frame-image');
+        const framePlaceholder = document.getElementById('frame-placeholder');
+        const a4Sheet = document.getElementById('a4-sheet');
+        const a4Wrapper = document.getElementById('a4-wrapper');
+        const imageLoader = document.getElementById('imageLoader');
+        const uploadPlaceholder = document.getElementById('uploadPlaceholder');
+        const uploadSuccess = document.getElementById('uploadSuccess');
+        const fileNameSpan = document.getElementById('fileName');
+        
+        // Sliders Elements
+        const sliderZoom = document.getElementById('slider-zoom');
+        const sliderPanX = document.getElementById('slider-pan-x');
+        const sliderPanY = document.getElementById('slider-pan-y');
+
+        // Slider Value Displays
+        const valZoom = document.getElementById('val-zoom');
+        const valPanX = document.getElementById('val-pan-x');
+        const valPanY = document.getElementById('val-pan-y');
+
+        // Toast Engine
+        function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            toast.className = `flex items-center p-3.5 rounded-lg shadow-xl text-xs font-semibold border transition-all duration-300 transform translate-x-12 opacity-0 pointer-events-auto max-w-sm ${
-                type === 'success' ? 'bg-emerald-900/90 border-emerald-500/30 text-emerald-350' :
-                type === 'error' ? 'bg-rose-900/90 border-rose-500/30 text-rose-300' :
-                'bg-slate-800 border-slate-700 text-amber-400'
-            }`;
             
-            const icon = type === 'success' ? 'fa-circle-check' :
-                         type === 'error' ? 'fa-triangle-exclamation' : 'fa-circle-info';
-
-            toast.innerHTML = `
-                <i class="fa-solid ${icon} text-sm mr-2.5"></i>
-                <div class="flex-1">${message}</div>
-                <button onclick="this.parentElement.remove()" class="ml-3 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
-            `;
+            let bgClass = "bg-slate-900 border-emerald-800 text-emerald-400";
+            let icon = '<i class="fa-solid fa-circle-check"></i>';
+            if (type === 'error') {
+                bgClass = "bg-slate-900 border-red-900 text-red-400";
+                icon = '<i class="fa-solid fa-circle-exclamation"></i>';
+            } else if (type === 'info') {
+                bgClass = "bg-slate-900 border-indigo-800 text-indigo-400";
+                icon = '<i class="fa-solid fa-circle-info"></i>';
+            }
+            
+            toast.className = `flex items-center gap-3 px-4 py-3 rounded-xl border shadow-xl ${bgClass} transition-all duration-300 transform translate-y-2 opacity-0 text-xs font-semibold max-w-sm z-[110]`;
+            toast.innerHTML = `${icon} <span>${message}</span>`;
             
             container.appendChild(toast);
             
             // Trigger animation
             setTimeout(() => {
-                toast.classList.remove('translate-x-12', 'opacity-0');
+                toast.classList.remove('translate-y-2', 'opacity-0');
             }, 10);
-
-            // Auto-dismiss
+            
+            // Auto dismiss
             setTimeout(() => {
-                toast.classList.add('translate-x-12', 'opacity-0');
-                setTimeout(() => { toast.remove(); }, 5000);
-            }, 5000);
+                toast.classList.add('translate-y-2', 'opacity-0');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 4000);
         }
 
-        // Handle Image uploads and bind to preview component
-        function handleFileUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
+        // DYNAMIC ASTROLOGICAL GRID RENDERER
+        function renderAstrologyGrid(gridId, dataArray, label) {
+            const container = document.getElementById(gridId);
+            container.innerHTML = ''; // Reset grid content
 
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const imgData = e.target.result;
-                
-                // Update UI Label
-                document.getElementById('file2-label').innerHTML = `<i class="fa-solid fa-circle-check mr-2 text-emerald-400"></i> நபர் படம் அப்லோடு செய்யப்பட்டுள்ளது`;
+            // South Indian traditional 4x4 layout mapping clockwise
+            const cellLayout = [
+                { index: 0, name: "மீனம்" },
+                { index: 1, name: "மேஷம்" },
+                { index: 2, name: "ரிஷபம்" },
+                { index: 3, name: "மிதுனம்" },
+                { index: 11, name: "கும்பம்" },
+                { index: -1, isCenter: true }, // The 2x2 merged core
+                { index: 4, name: "கடகம்" },
+                { index: 10, name: "மகரம்" },
+                { index: 5, name: "சிம்மம்" },
+                { index: 9, name: "தனுசு" },
+                { index: 8, name: "விருச்சிகம்" },
+                { index: 7, name: "துலாம்" },
+                { index: 6, name: "கன்னி" }
+            ];
 
-                // Update Photo Layer
-                userPhotoImg.src = imgData;
-                userPhotoImg.classList.remove('hidden');
-                document.getElementById('no-photo-p').classList.add('hidden');
-                document.getElementById('avatar-helper-text').classList.add('hidden');
+            cellLayout.forEach(cell => {
+                if (cell.isCenter) {
+                    const centerDiv = document.createElement('div');
+                    centerDiv.className = "astro-center font-tamil cursor-pointer select-none";
+                    centerDiv.setAttribute('contenteditable', 'true');
+                    centerDiv.textContent = label;
+                    container.appendChild(centerDiv);
+                } else {
+                    const cellDiv = document.createElement('div');
+                    cellDiv.className = "astro-cell cursor-pointer transition-colors duration-150 select-none hover:bg-amber-100/30";
+                    // Pass target identifiers
+                    cellDiv.onclick = () => openPlanetSelector(gridId, cell.index, cell.name);
 
-                // Reset inside transform values on new upload
-                coordinates.photo.zoom = 100;
-                coordinates.photo.panX = 0;
-                coordinates.photo.panY = 0;
-                updateControlUI();
+                    const nameLabel = document.createElement('span');
+                    nameLabel.className = "text-[9px] text-slate-400 select-none pointer-events-none";
+                    nameLabel.textContent = cell.name;
 
-                showToast("நபரின் புகைப்படம் வெற்றிகரமாக ஏற்றப்பட்டது. ஸ்லைடர்களைப் பயன்படுத்தி நகர்த்திக் கொள்ளலாம்.", "success");
-            };
-            reader.readAsDataURL(file);
-        }
+                    const planetDisplay = document.createElement('span');
+                    planetDisplay.className = "text-center font-bold text-xs theme-text-primary mt-1 select-none pointer-events-none";
+                    planetDisplay.textContent = dataArray[cell.index].join(', ') || '';
 
-        // Initialize drag listeners for mouse and touch interactions
-        function initInteractiveLayers() {
-            setupDraggability(templatePhoto, 'photo');
-        }
-
-        function setupDraggability(element, layer) {
-            const onDown = (e) => {
-                isDragging = true;
-                dragTarget = element;
-                
-                const clientX = e.type.startsWith('touch') ? e.touches[0].clientX : e.clientX;
-                const clientY = e.type.startsWith('touch') ? e.touches[0].clientY : e.clientY;
-                
-                startX = clientX - coordinates[layer].x;
-                startY = clientY - coordinates[layer].y;
-                
-                if (e.cancelable) e.preventDefault();
-            };
-
-            const onMove = (e) => {
-                if (!isDragging || dragTarget !== element) return;
-                
-                const currentClientX = e.type.startsWith('touch') ? e.touches[0].clientX : e.clientX;
-                const currentClientY = e.type.startsWith('touch') ? e.touches[0].clientY : e.clientY;
-
-                let newX = currentClientX - startX;
-                let newY = currentClientY - startY;
-
-                coordinates[layer].x = Math.round(newX);
-                coordinates[layer].y = Math.round(newY);
-
-                applyStyles(element, coordinates[layer]);
-                updateControlUI();
-            };
-
-            const onUp = () => {
-                isDragging = false;
-                dragTarget = null;
-            };
-
-            element.addEventListener('mousedown', onDown);
-            window.addEventListener('mousemove', onMove);
-            window.addEventListener('mouseup', onUp);
-
-            element.addEventListener('touchstart', onDown, { passive: false });
-            window.addEventListener('touchmove', onMove, { passive: false });
-            window.addEventListener('touchend', onUp);
-        }
-
-        // Apply visual coordinates inline on DOM elements
-        function applyStyles(element, coords) {
-            // Reposition the frame
-            element.style.left = coords.x + 'px';
-            element.style.top = coords.y + 'px';
-            element.style.width = coords.w + 'px';
-            element.style.height = coords.h + 'px';
-            if (coords.radius !== undefined) {
-                element.style.borderRadius = coords.radius + 'px';
-            }
-
-            // Reposition/transform the inner image
-            if (userPhotoImg) {
-                const scaleVal = coords.zoom / 100;
-                userPhotoImg.style.transform = `scale(${scaleVal}) translate(${coords.panX}px, ${coords.panY}px)`;
-                userPhotoImg.style.transformOrigin = 'center center';
-            }
-        }
-
-        // Update Slider UI controls
-        function updateControlUI() {
-            const currentCoords = coordinates.photo;
-            
-            // Sync Frame Slider Positions
-            sliderX.value = currentCoords.x;
-            sliderY.value = currentCoords.y;
-            sliderW.value = currentCoords.w;
-            sliderH.value = currentCoords.h;
-            sliderRadius.value = currentCoords.radius;
-            
-            // Sync Inner Image Slider Positions
-            sliderZoom.value = currentCoords.zoom;
-            sliderPanX.value = currentCoords.panX;
-            sliderPanY.value = currentCoords.panY;
-
-            // Sync Text Values
-            valX.textContent = currentCoords.x + 'px';
-            valY.textContent = currentCoords.y + 'px';
-            valW.textContent = currentCoords.w + 'px';
-            valH.textContent = currentCoords.h + 'px';
-            valRadius.textContent = currentCoords.radius + 'px';
-            
-            valZoom.textContent = currentCoords.zoom + '%';
-            valPanX.textContent = currentCoords.panX + 'px';
-            valPanY.textContent = currentCoords.panY + 'px';
-
-            applyStyles(templatePhoto, currentCoords);
-        }
-
-        // Direct coordinate updates through Sliders
-        function updatePhotoCoordinate(prop, val) {
-            const numericVal = parseInt(val);
-            coordinates.photo[prop] = numericVal;
-
-            applyStyles(templatePhoto, coordinates.photo);
-            updateControlUI();
-        }
-
-        // High Quality File 3 Generator & Downloader
-        function downloadOutput(format) {
-            const element = document.getElementById('output-canvas-page');
-            
-            // Temporary hide active-layer selection outlines and editor tips before rendering
-            templatePhoto.classList.remove('active-layer');
-            const editTip = document.getElementById('edit-tip-banner');
-            editTip.classList.add('hidden');
-
-            showToast("உயர்தரக் கோப்பு உருவாக்கப்படுகிறது, தயவுசெய்து சில வினாடிகள் காத்திருக்கவும்...", "info");
-
-            // Generate image from element using custom scale 3 for ultra sharpness (ideal for printing)
-            html2canvas(element, {
-                scale: 3,
-                useCORS: true,
-                allowTaint: true,
-                backgroundColor: "#ffffff"
-            }).then(canvas => {
-                // Restore border outline and editor tips
-                templatePhoto.classList.add('active-layer');
-                editTip.classList.remove('hidden');
-
-                // Get Person name for file name
-                const personName = document.getElementById('lbl-name').innerText;
-                const cleanName = personName.replace(/[^a-zA-Z0-9]/g, "_");
-
-                if (format === 'image') {
-                    // Export as sharp JPG
-                    const link = document.createElement('a');
-                    link.download = `${cleanName}_Combined_File3.jpg`;
-                    link.href = canvas.toDataURL('image/jpeg', 0.95);
-                    link.click();
-                    showToast("JPEG கோப்பு வெற்றிகரமாக பதிவிறக்கப்பட்டது!", "success");
-                } else if (format === 'pdf') {
-                    // Export as structured A4 PDF
-                    const { jsPDF } = window.jspdf;
-                    const pdf = new jsPDF('p', 'mm', 'a4');
-                    const imgData = canvas.toDataURL('image/jpeg', 0.95);
-                    
-                    pdf.addImage(imgData, 'JPEG', 0, 0, 210, 297);
-                    pdf.save(`${cleanName}_Combined_File3.pdf`);
-                    showToast("PDF கோப்பு வெற்றிகரமாக பதிவிறக்கப்பட்டது!", "success");
+                    cellDiv.appendChild(nameLabel);
+                    cellDiv.appendChild(planetDisplay);
+                    container.appendChild(cellDiv);
                 }
-            }).catch(err => {
-                showToast("கோப்பை உருவாக்குவதில் பிழை: " + err.message, "error");
-                templatePhoto.classList.add('active-layer');
-                editTip.classList.remove('hidden');
             });
         }
+
+        // OPEN PLANET SELECTOR MODAL
+        function openPlanetSelector(gridId, cellIndex, cellName) {
+            currentTargetGrid = gridId;
+            currentTargetCellIndex = cellIndex;
+
+            const dataArray = (gridId === 'rasi-grid') ? rasiData : navamsamData;
+            // Preload already selected values (clone array safely)
+            tempSelectedPlanets = [...dataArray[cellIndex]];
+
+            const gridLabel = (gridId === 'rasi-grid') ? "ராசி கட்டம்" : "அம்ச கட்டம்";
+            document.getElementById('modal-grid-title').textContent = `${cellName} - கிரகங்கள் தேர்வு (${gridLabel})`;
+
+            renderModalSelectorList();
+            updateModalSelectedCount();
+
+            // Open modal
+            document.getElementById('planet-modal').classList.remove('hidden');
+        }
+
+        // RENDER MODAL SELECTION LIST ITEMS
+        function renderModalSelectorList() {
+            const listContainer = document.getElementById('modal-planets-list');
+            listContainer.innerHTML = '';
+
+            planetList.forEach(planet => {
+                const isSelected = tempSelectedPlanets.includes(planet.short);
+                const btn = document.createElement('button');
+                
+                // Toggle state styles
+                if (isSelected) {
+                    btn.className = "py-3 rounded-xl border text-xs font-bold transition duration-200 bg-amber-950/30 border-amber-500 text-amber-400 font-tamil shadow-md shadow-amber-950/20";
+                } else {
+                    btn.className = "py-3 rounded-xl border border-slate-800 bg-slate-950 text-slate-400 hover:border-slate-700 hover:text-slate-200 text-xs font-bold transition duration-200 font-tamil";
+                }
+                
+                btn.textContent = planet.display;
+                btn.onclick = () => togglePlanetSelection(planet.short);
+                listContainer.appendChild(btn);
+            });
+        }
+
+        // TOGGLE PLANET IN TEMP LIST
+        function togglePlanetSelection(planetShort) {
+            const index = tempSelectedPlanets.indexOf(planetShort);
+            if (index > -1) {
+                tempSelectedPlanets.splice(index, 1);
+            } else {
+                if (tempSelectedPlanets.length >= 3) {
+                    showToast("ஒரு கட்டத்தில் அதிகபட்சம் 3 கிரகங்களை மட்டுமே தேர்வு செய்ய முடியும்!", "error");
+                    return;
+                }
+                tempSelectedPlanets.push(planetShort);
+            }
+            renderModalSelectorList();
+            updateModalSelectedCount();
+        }
+
+        // UPDATE SELECTOR BADGES
+        function updateModalSelectedCount() {
+            document.getElementById('modal-selected-count').textContent = `${tempSelectedPlanets.length} / 3`;
+        }
+
+        // APPLY SELECTIONS BACK TO DATA ENGINE
+        function applySelectedPlanets() {
+            const dataArray = (currentTargetGrid === 'rasi-grid') ? rasiData : navamsamData;
+            dataArray[currentTargetCellIndex] = [...tempSelectedPlanets];
+
+            // Re-render target grids
+            const gridLabel = (currentTargetGrid === 'rasi-grid') ? "ராசி" : "அம்சம்";
+            renderAstrologyGrid(currentTargetGrid, dataArray, gridLabel);
+
+            closePlanetSelector();
+            showToast("கிரகங்கள் வெற்றிகரமாகப் புதுப்பிக்கப்பட்டன!");
+        }
+
+        // CLEAR TEMP STORAGE
+        function clearSelectedPlanets() {
+            tempSelectedPlanets = [];
+            renderModalSelectorList();
+            updateModalSelectedCount();
+        }
+
+        // CLOSE SELECTION POPUP
+        function closePlanetSelector() {
+            document.getElementById('planet-modal').classList.add('hidden');
+            currentTargetGrid = null;
+            currentTargetCellIndex = null;
+        }
+
+        // Multi-theme switcher engine (Dynamic without replacing contenteditable edits)
+        function setHoroscopeTheme(themeName) {
+            // Remove previous theme classes
+            a4Sheet.classList.remove('theme-red', 'theme-blue', 'theme-green', 'theme-purple');
+            
+            // Add new class
+            a4Sheet.classList.add(`theme-${themeName}`);
+            activeTheme = themeName;
+
+            // Update Astrology Grid border assets dynamically matching chosen themes
+            const rootStyle = document.documentElement.style;
+            if (themeName === 'red') {
+                rootStyle.setProperty('--theme-primary', '#991b1b');
+                rootStyle.setProperty('--theme-secondary', '#b91c1c');
+            } else if (themeName === 'blue') {
+                rootStyle.setProperty('--theme-primary', '#1e3a8a');
+                rootStyle.setProperty('--theme-secondary', '#2563eb');
+            } else if (themeName === 'green') {
+                rootStyle.setProperty('--theme-primary', '#14532d');
+                rootStyle.setProperty('--theme-secondary', '#16a34a');
+            } else if (themeName === 'purple') {
+                rootStyle.setProperty('--theme-primary', '#581c87');
+                rootStyle.setProperty('--theme-secondary', '#7e22ce');
+            }
+
+            // Also update photo frame border synchronously
+            photoFrame.style.borderColor = "var(--theme-primary)";
+
+            // Highlight chosen button
+            document.querySelectorAll('.theme-option-btn').forEach(btn => {
+                btn.classList.remove('border-red-500', 'border-blue-500', 'border-emerald-500', 'border-purple-500', 'border-slate-700');
+                btn.classList.add('border-slate-700');
+            });
+
+            const activeBtn = document.getElementById(`btn-theme-${themeName}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('border-slate-700');
+                if (themeName === 'red') activeBtn.classList.add('border-red-500');
+                if (themeName === 'blue') activeBtn.classList.add('border-blue-500');
+                if (themeName === 'green') activeBtn.classList.add('border-emerald-500');
+                if (themeName === 'purple') activeBtn.classList.add('border-purple-500');
+            }
+
+            // Show confirmation toast
+            let tamilThemeName = "மங்கல சிவப்பு";
+            if (themeName === 'blue') tamilThemeName = "அரச நீலம்";
+            if (themeName === 'green') tamilThemeName = "பக்தி பசுமை";
+            if (themeName === 'purple') tamilThemeName = "மங்கல ஊதா";
+
+            showToast(`வடிவமைப்பு வெற்றிகரமாக மாறியது: ${tamilThemeName}`, 'info');
+        }
+
+        // Initialize Real-time Workspace Scaling for Auto-Fit
+        function autoFit() {
+            const workspace = document.querySelector('main');
+            const targetWidth = 794;
+            const targetHeight = 1123;
+            const padding = 32; // md:p-8 equal to 32px padding on each side
+            
+            const availableWidth = workspace.clientWidth - padding;
+            const availableHeight = workspace.clientHeight - padding - 60; // 60px viewport controller offset
+            
+            const widthScale = availableWidth / targetWidth;
+            const heightScale = availableHeight / targetHeight;
+            
+            // Choose the smaller scale factor to fit both width and height fully
+            let finalScale = Math.min(widthScale, heightScale);
+            finalScale = Math.max(0.3, Math.min(1.1, finalScale)); // Constraint scale values
+            
+            setCanvasScale(finalScale);
+            showToast(`தானியங்கி அளவாக்கம்: ${(finalScale * 100).toFixed(0)}%`, 'info');
+        }
+
+        function changeCanvasZoom(zoomLevel) {
+            setCanvasScale(zoomLevel);
+            showToast(`அளவாக்கம்: ${zoomLevel * 100}%`, 'info');
+        }
+
+        // Set scaling style dynamically
+        function setCanvasScale(scale) {
+            currentScale = scale;
+            a4Wrapper.style.transform = `scale(${scale})`;
+            
+            // Adjust margin bottom dynamically so workspace scroll boundaries align properly
+            const defaultHeight = 1123;
+            const scaledHeight = defaultHeight * scale;
+            const marginNeeded = Math.max(0, scaledHeight - defaultHeight);
+            a4Wrapper.style.marginBottom = `${marginNeeded + 40}px`;
+        }
+
+        // Synchronize and update layout values
+        function updateLayout() {
+            const zoom = parseInt(sliderZoom.value);
+            const panX = parseInt(sliderPanX.value);
+            const panY = parseInt(sliderPanY.value);
+
+            // Frame Position & Sizing CSS mapping using premium hardcoded state defaults from image_718564.png
+            photoFrame.style.left = `${frameX}px`;
+            photoFrame.style.top = `${frameY}px`;
+            photoFrame.style.width = `${frameW}px`;
+            photoFrame.style.height = `${frameH}px`;
+            photoFrame.style.borderRadius = `${frameR}px`;
+
+            // Inner Image zoom and pan mappings (safely handling ratios)
+            frameImage.style.transform = `scale(${zoom / 100}) translate(${panX}px, ${panY}px)`;
+
+            // Display text update
+            valZoom.textContent = `${zoom}%`;
+            valPanX.textContent = `${panX}px`;
+            valPanY.textContent = `${panY}px`;
+        }
+
+        // Initialize Slider Listeners
+        const allSliders = [sliderZoom, sliderPanX, sliderPanY];
+        allSliders.forEach(slider => {
+            slider.addEventListener('input', updateLayout);
+        });
+
+        // Frame Drag and Drop Engine Logic (Mouse & Touch Native Support)
+        function startDrag(e) {
+            // Only allow dragging when targeting the frame specifically or elements inside
+            if (e.target !== photoFrame && !photoFrame.contains(e.target)) return;
+            // Prevent interference with input fields or sliders
+            if (e.target.tagName === 'INPUT') return;
+
+            isDragging = true;
+            photoFrame.classList.add('active-layer');
+
+            const clientX = e.type.startsWith('touch') ? e.touches[0].clientX : e.clientX;
+            const clientY = e.type.startsWith('touch') ? e.touches[0].clientY : e.clientY;
+
+            startX = clientX;
+            startY = clientY;
+            originalLeft = parseInt(photoFrame.style.left) || 0;
+            originalTop = parseInt(photoFrame.style.top) || 0;
+
+            if (e.cancelable) e.preventDefault();
+        }
+
+        // Handle Touch and Mouse movements
+        function doDrag(e) {
+            if (!isDragging) return;
+
+            const clientX = e.type.startsWith('touch') ? e.touches[0].clientX : e.clientX;
+            const clientY = e.type.startsWith('touch') ? e.touches[0].clientY : e.clientY;
+
+            // Divide movement delta by current viewport zoom scale to align drag distance perfectly
+            const deltaX = (clientX - startX) / currentScale;
+            const deltaY = (clientY - startY) / currentScale;
+
+            let targetX = Math.round(originalLeft + deltaX);
+            let targetY = Math.round(originalTop + deltaY);
+
+            // Keep within sensible limits of the A4 boundaries
+            targetX = Math.max(-100, Math.min(600, targetX));
+            targetY = Math.max(-100, Math.min(900, targetY));
+
+            frameX = targetX;
+            frameY = targetY;
+
+            updateLayout();
+        }
+
+        function stopDrag() {
+            if (isDragging) {
+                isDragging = false;
+            }
+        }
+
+        // Add both Mouse and Mobile Touch Listeners for Drag and Drop
+        photoFrame.addEventListener('mousedown', startDrag);
+        window.addEventListener('mousemove', doDrag);
+        window.addEventListener('mouseup', stopDrag);
+
+        photoFrame.addEventListener('touchstart', startDrag, { passive: false });
+        window.addEventListener('touchmove', doDrag, { passive: false });
+        window.addEventListener('touchend', stopDrag);
+
+        // Load image from user computer safely (File 2)
+        imageLoader.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                showToast("தவறான கோப்பு முறை! தயவுசெய்து ஒரு படத்தை தேர்ந்தெடுக்கவும்.", "error");
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                frameImage.src = event.target.result;
+                frameImage.classList.remove('hidden');
+                framePlaceholder.classList.add('hidden');
+                
+                // Toggle Dropzone Area States
+                uploadPlaceholder.classList.add('hidden');
+                uploadSuccess.classList.remove('hidden');
+                fileNameSpan.textContent = file.name;
+                
+                showToast("புகைப்படம் வெற்றிகரமாக ஏற்றப்பட்டது!");
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // Reset All Settings to standard default template
+        function resetAllSettings() {
+            frameX = 516;
+            frameY = 154;
+            frameW = 204;
+            frameH = 273;
+            frameR = 8;
+            sliderZoom.value = "100";
+            sliderPanX.value = "0";
+            sliderPanY.value = "0";
+            
+            frameImage.src = "";
+            frameImage.classList.add('hidden');
+            framePlaceholder.classList.remove('hidden');
+            uploadPlaceholder.classList.remove('hidden');
+            uploadSuccess.classList.add('hidden');
+            fileNameSpan.textContent = "";
+            imageLoader.value = "";
+
+            // Restore initial grid data states
+            rasiData = JSON.parse(JSON.stringify(defaultRasiData));
+            navamsamData = JSON.parse(JSON.stringify(defaultNavamsamData));
+
+            // Re-render
+            renderAstrologyGrid("rasi-grid", rasiData, "ராசி");
+            renderAstrologyGrid("navamsam-grid", navamsamData, "அம்சம்");
+
+            setHoroscopeTheme('red');
+            updateLayout();
+            showToast("அமைப்புகள் அனைத்தும் மீட்டமைக்கப்பட்டன!", "info");
+        }
+
+        // Safe Sanitation function for Export Filename matching User inputs
+        function getSanitizedFileName(suffix = "") {
+            const nameElement = document.getElementById('varan-name');
+            let baseName = nameElement.textContent.trim() || "varan_biodata";
+            // strip commas, spaces, special chars
+            baseName = baseName.replace(/[^a-zA-Z0-9அ-ஹ௨-௯ ]/g, "").replace(/\s+/g, "_");
+            return `${baseName}${suffix}`;
+        }
+
+        // Capture Engine Prep
+        function prepA4ForCapture(isExportStart) {
+            if (isExportStart) {
+                document.body.classList.add('exporting');
+                photoFrame.classList.remove('active-layer');
+            } else {
+                document.body.classList.remove('exporting');
+                photoFrame.classList.add('active-layer');
+            }
+        }
+
+        // Image Exporter (High-Res 3x Scale suitable for crisp hardware printing)
+        function exportAsImage() {
+            showToast("படம் உருவாக்கம் தொடங்கப்பட்டது. காத்திருக்கவும்...", "info");
+            
+            // Temporary scale up preview for rendering perfectly
+            const prevScale = currentScale;
+            setCanvasScale(1); 
+            
+            prepA4ForCapture(true);
+
+            setTimeout(() => {
+                html2canvas(document.getElementById('a4-sheet'), {
+                    scale: 3, // Premium ultra-sharp scale ratio (300DPI matching standard)
+                    useCORS: true,
+                    logging: false,
+                    backgroundColor: "#ffffff"
+                }).then(canvas => {
+                    prepA4ForCapture(false);
+                    setCanvasScale(prevScale);
+
+                    try {
+                        const image = canvas.toDataURL("image/jpeg", 0.95);
+                        const link = document.createElement('a');
+                        link.download = `${getSanitizedFileName('_ஜாதகம்')}.jpg`;
+                        link.href = image;
+                        link.click();
+                        showToast("உயர்தர ஜாதகப் படம் (JPEG) வெற்றிகரமாகத் தரவிறக்கம் செய்யப்பட்டது!");
+                    } catch (e) {
+                        showToast("சேமிப்பதில் சிக்கல் ஏற்பட்டது. மீண்டும் முயலவும்.", "error");
+                        console.error(e);
+                    }
+                }).catch(err => {
+                    prepA4ForCapture(false);
+                    setCanvasScale(prevScale);
+                    showToast("படம் தயாரிப்பதில் பிழை ஏற்பட்டது.", "error");
+                    console.error(err);
+                });
+            }, 300);
+        }
+
+        // PDF Exporter (Precise Vector Wrapper)
+        function exportAsPDF() {
+            showToast("PDF தயாரிப்பு தொடங்கப்பட்டது. காத்திருக்கவும்...", "info");
+            
+            const prevScale = currentScale;
+            setCanvasScale(1); 
+            
+            prepA4ForCapture(true);
+
+            setTimeout(() => {
+                html2canvas(document.getElementById('a4-sheet'), {
+                    scale: 3,
+                    useCORS: true,
+                    logging: false,
+                    backgroundColor: "#ffffff"
+                }).then(canvas => {
+                    prepA4ForCapture(false);
+                    setCanvasScale(prevScale);
+
+                    try {
+                        const imgData = canvas.toDataURL('image/jpeg', 0.95);
+                        const { jsPDF } = window.jspdf;
+                        
+                        // Standard A4 physical sizing matching vectors in pts
+                        const pdf = new jsPDF('p', 'pt', 'a4');
+                        const imgWidth = 595.28; // Standard A4 Width in point size
+                        const imgHeight = 841.89; // Standard A4 Height in point size
+                        
+                        pdf.addImage(imgData, 'JPEG', 0, 0, imgWidth, imgHeight);
+                        pdf.save(`${getSanitizedFileName('_ஜாதகம்')}.pdf`);
+                        showToast("பிரீமியம் ஜாதக PDF வெற்றிகரமாகத் தரவிறக்கம் செய்யப்பட்டது!");
+                    } catch (e) {
+                        showToast("PDF தயாரிப்பதில் சிக்கல் ஏற்பட்டது.", "error");
+                        console.error(e);
+                    }
+                }).catch(err => {
+                    prepA4ForCapture(false);
+                    setCanvasScale(prevScale);
+                    showToast("PDF உருவாக்கத்தில் பிழை.", "error");
+                    console.error(err);
+                });
+            }, 300);
+        }
+
+        // Instructions Modal Handlers
+        function showInstructions() {
+            document.getElementById('instructions-modal').classList.remove('hidden');
+        }
+        
+        function hideInstructions() {
+            document.getElementById('instructions-modal').classList.add('hidden');
+        }
+
+        // Window Initial Load Trigger
+        window.onload = function() {
+            // Render default state astrology grids dynamically on load
+            renderAstrologyGrid("rasi-grid", rasiData, "ராசி");
+            renderAstrologyGrid("navamsam-grid", navamsamData, "அம்சம்");
+
+            updateLayout();
+            autoFit();
+            
+            // Add slight resize bounce prevention handler
+            let resizeTimeout;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => {
+                    autoFit();
+                }, 200);
+            });
+        };
     </script>
 </body>
 </html>
